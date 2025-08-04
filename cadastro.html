@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FECIP</title>
+    <link rel="stylesheet" href="./assets/css/cadastro.css" />
+  </head>
+  <body>
+    <div class="cadastro">
+      <div class="topoCad">
+        <span>Cadastre-se</span>
+        <div class="topoCadLogin">
+          <span class="registrar">Já tem cadastro?</span>
+          <span class="entrar" onclick="cadSome()">Faça seu Login</span>
+        </div>
+        <hr/>
+        <div class="cadItens">
+            <div class="inputCad">
+                <span id="iconeNome">
+                  <img src="./assets/imgs/cadastroImg/user.png" alt="Nome do Usuário">
+                </span>
+                <input type="text" name="name" placeholder="Digite seu nome" style="margin-bottom: 15px;">
+                <span id="iconePassword">
+                  <img src="./assets/imgs/cadastroImg/senha.png" alt="Senha">
+                </span>
+                <input class="senhaOnOff" type="password" name="password" placeholder="Digite sua senha">
+                <div class="mostrarSenha">
+                    <span>Mostrar senha</span>
+                    <input onclick="mostrarSenha(this)"type="checkbox" id="checkbox">
+                </div>
+                <div class="enviarCad">
+                  <span>CADASTRAR</span>
+                </div>
+            </div>
+            
+            <!-- <input type="password" name="" placeholder="Digite Sua Senha"> -->
+        </div>
+      </div>
+    </div>
+    <div class="logar">
+      <div class="topoCad">
+        <span>Entrar</span>
+        <div class="topoCadLogin">
+          <span class="registrar">Não tem Login?</span>
+          <span class="entrar" onclick="loginSome()">Faça seu Cadastro</span>
+        </div>
+        <hr/>
+        <div class="cadItens">
+          <div class="inputCad">
+            <span id="iconeNome">
+              <img src="./assets/imgs/cadastroImg/user.png" alt="Nome do Usuário">
+            </span>
+            <input type="text" name="name" placeholder="Digite seu nome" style="margin-bottom: 15px;">
+            <span id="iconePassword">
+              <img src="./assets/imgs/cadastroImg/senha.png" alt="Senha">
+            </span>
+            <input class="senhaOnOff" type="password" name="password" placeholder="Digite sua senha">
+            <div class="mostrarSenha">
+                <span>Mostrar senha</span>
+                <input onclick="mostrarSenha(this)"type="checkbox" id="checkbox">
+            </div>
+                <a href="./fluxocash.html" class="enviarCad">
+                  <span>ENTRAR</span>
+                </a>
+            </div>
+        </div>
+      </div>
+    </div>
+    <script src="./cadTransicao.js"></script>
+  </body>
+</html>

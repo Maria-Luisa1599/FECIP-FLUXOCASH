@@ -1,0 +1,197 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Boldonse&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"); */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  background-color:rgb(82, 168, 146);
+}
+/* body::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("/assets/imgs/cadastroImg/bgMoeda.png");
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px);
+  z-index: -1; 
+} */
+.cadastro{
+  position: absolute;
+  /* max-width: 600px; */
+  /* max-height: 800px; */
+  height: 600px;
+  background:#336C77;
+  animation: fade-up 1s;
+  border-radius: 10px;
+  opacity: 1;
+}
+.AnimacaoSai{
+  animation: fade-down 0.6s forwards;
+}
+.AnimacaoEntra{
+  animation: fade-up 0.6s forwards;
+  pointer-events: all;
+}
+@keyframes fade-down{
+  0%{
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+  100%{
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+}
+@keyframes fade-up{
+  0%{
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  100%{
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
+.topoCad{
+  display:flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  height: 150px;
+  color:  white;
+  /* max-height: 260px; */
+  /* background: blue; */
+}
+.topoCad span{
+  font-family: Arial;
+  font-weight: 600;
+  font-size: 28px;
+}
+.topoCadLogin span:first-of-type {
+  color: white;
+  cursor: default;
+}
+.topoCadLogin span{
+  font-family: Arial;
+  font-weight: 600;
+  font-size: 16px;
+  height: 0;
+  color: #9DC2B7;
+  cursor: pointer;
+}
+hr{
+  width: 100%;
+  height: 2px;
+  /* background: rgb(209, 209, 209); */
+  background-color:rgb(53, 114, 126);
+}
+
+
+.logar{
+  position: absolute;
+  /* width: 600px;
+  height: 800px; */
+  height: 600px;
+  /* background: rgb(237, 237, 237); */
+  background-color:#336C77;
+  opacity: 0;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cadItens{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* padding: 100px; */
+}
+.inputCad{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
+  margin-bottom: -470px;
+  /* background: aqua; */
+}
+.inputCad span{
+  font-size: 16px;
+  font-weight: 600;
+  color: gray;
+}
+.inputCad input{
+  width: 400px;
+  height: 50px;
+  padding-left: 50px;
+  border-radius: 26px;
+  /* background: rgb(225, 225, 225); */
+  background: #D7E5D8;
+}
+
+#iconeNome {
+  position: relative;
+  top: 40px;
+  left: -180px;
+  width: 0px;
+}
+#iconeNome img{
+  width: 25px;
+}
+#iconePassword {
+  position: relative;
+  top: 47px;
+  left: -185px;
+  width: 0px;
+}
+#iconePassword img{
+  width: 30px;
+}
+
+.mostrarSenha{
+  display: flex;
+  align-items: center;
+  margin-bottom: 70px;
+  margin-right: -260px;
+}
+.mostrarSenha #checkbox{
+  width: 18px;
+}
+.mostrarSenha input:checked{
+  /* accent-color: gray; */
+  accent-color: #285862;
+
+}
+.mostrarSenha span{
+  font-size: 14px;
+  margin-right: 8px;
+  color: white;
+}
+
+.enviarCad{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 61px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.enviarCad span{
+  text-align: center;
+  width: 200px;
+  padding: 16px;
+  /* background: rgb(72, 179, 72); */
+  background: #D7E5D8;
+  /* color:  rgb(232, 231, 231); */
+  color: #336C77;
+  border-radius: 32px;
+}
