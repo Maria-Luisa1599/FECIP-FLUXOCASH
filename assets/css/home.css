@@ -9,7 +9,7 @@ body{
     display: grid;
     grid-template:
     "aside header header" 100px
-    "aside main main" 100px
+    "aside main main" 370px /* 100*/
     "aside main main" 441px / 350px;
     font-family: Arial;
 }

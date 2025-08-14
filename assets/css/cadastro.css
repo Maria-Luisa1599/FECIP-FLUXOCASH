@@ -12,7 +12,6 @@ body {
   align-items: center;
   height: 100vh;
   overflow: hidden;
-  background-color:rgb(82, 168, 146);
 }
 /* body::before {
   content: "";
@@ -185,7 +184,7 @@ hr{
   cursor: pointer;
   text-decoration: none;
 }
-.enviarCad span{
+.enviarCad a{
   text-align: center;
   width: 200px;
   padding: 16px;
