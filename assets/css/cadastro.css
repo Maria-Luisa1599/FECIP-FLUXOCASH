@@ -1,4 +1,5 @@
-/* @import url("https://fonts.googleapis.com/css2?family=Boldonse&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"); */
+@import url('/assets/css/style.css');
+
 * {
   margin: 0;
   padding: 0;
@@ -13,22 +14,11 @@ body {
   height: 100vh;
   overflow: hidden;
 }
-/* body::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: url("/assets/imgs/cadastroImg/bgMoeda.png");
-  background-size: cover;
-  background-position: center;
-  filter: blur(10px);
-  z-index: -1; 
-} */
+
 .cadastro{
   position: absolute;
-  /* max-width: 600px; */
-  /* max-height: 800px; */
   height: 600px;
-  background:#336C77;
+  background: var(--bg-card);
   animation: fade-up 1s;
   border-radius: 10px;
   opacity: 1;
@@ -67,8 +57,6 @@ body {
   flex-direction: column;
   height: 150px;
   color:  white;
-  /* max-height: 260px; */
-  /* background: blue; */
 }
 .topoCad span{
   font-family: Arial;
@@ -90,18 +78,14 @@ body {
 hr{
   width: 100%;
   height: 2px;
-  /* background: rgb(209, 209, 209); */
   background-color:rgb(53, 114, 126);
 }
 
 
 .logar{
   position: absolute;
-  /* width: 600px;
-  height: 800px; */
   height: 600px;
-  /* background: rgb(237, 237, 237); */
-  background-color:#336C77;
+  background: var(--bg-card);
   opacity: 0;
   border-radius: 10px;
   pointer-events: none;
@@ -113,7 +97,6 @@ hr{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* padding: 100px; */
 }
 .inputCad{
   display:flex;
@@ -121,7 +104,6 @@ hr{
   align-items: center;
   width: 500px;
   margin-bottom: -470px;
-  /* background: aqua; */
 }
 .inputCad span{
   font-size: 16px;
@@ -133,8 +115,16 @@ hr{
   height: 50px;
   padding-left: 50px;
   border-radius: 26px;
-  /* background: rgb(225, 225, 225); */
   background: #D7E5D8;
+}
+#nomeClienteLogin, #nomeCliente {
+  text-transform: uppercase;
+}
+#senhaClienteLogin, #senhaCliente {
+  text-transform: none; 
+}
+.inputCad input::placeholder{
+  text-transform: none;
 }
 
 #iconeNome {
@@ -166,7 +156,6 @@ hr{
   width: 18px;
 }
 .mostrarSenha input:checked{
-  /* accent-color: gray; */
   accent-color: #285862;
 
 }
@@ -188,9 +177,7 @@ hr{
   text-align: center;
   width: 200px;
   padding: 16px;
-  /* background: rgb(72, 179, 72); */
   background: #D7E5D8;
-  /* color:  rgb(232, 231, 231); */
   color: #336C77;
   border-radius: 32px;
 }

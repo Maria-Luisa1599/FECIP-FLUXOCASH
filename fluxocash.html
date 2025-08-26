@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="icon" href="./assets/imgs/favIcon.png">
     <link rel="stylesheet" href="./assets/css/home.css" />
 </head>
 <body>
@@ -23,12 +24,16 @@
     </aside>
     <header>
         <div class="dadosUser">
-            <span>NOME DO USUÁRIO</span>
+            <span id="nomeUserTela"></span>
             <div>
                 <img src="./assets/imgs/mainImg/userImg.png" alt="Imagem do Usuário">
             </div>
         </div>
     </header>
     <main></main>    
+    <script>
+        const usuario = localStorage.getItem("usuarioLogado");
+        document.getElementById("nomeUserTela").textContent = usuario ?? "Visitante";
+    </script>
 </body>
 </html>

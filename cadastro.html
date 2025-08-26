@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FECIP</title>
+    <link rel="icon" href="./assets/imgs/favIcon.png">
     <link rel="stylesheet" href="./assets/css/cadastro.css" />
   </head>
   <body>
@@ -61,17 +62,17 @@
           <span id="iconeNome">
             <img src="./assets/imgs/cadastroImg/user.png" alt="Nome do Usuário">
           </span>
-          <input id="nomeCliente" type="text" placeholder="Digite seu nome" style="margin-bottom: 15px;">
+          <input id="nomeClienteLogin" type="text" placeholder="Digite seu nome" style="margin-bottom: 15px;">
           <span id="iconePassword">
             <img src="./assets/imgs/cadastroImg/senha.png" alt="Senha">
           </span>
-          <input id="senhaCliente" class="senhaOnOff" type="password" placeholder="Digite sua senha">
+          <input id="senhaClienteLogin" class="senhaOnOff" type="password" placeholder="Digite sua senha">
           <div class="mostrarSenha">
             <span>Mostrar senha</span>
             <input onclick="mostrarSenha(this)" type="checkbox" id="checkbox">
           </div>
           <div class="enviarCad">
-            <a href="#" class="enviarCad">
+            <a onclick="verificarCliente()" class="enviarCad">
               <span>Entrar</span>
             </a>
           </div>
@@ -79,48 +80,6 @@
       </div>
     </div>
   </div>
-
-  <!-- <div class="logar">
-    <div class="topoCad">
-      <span>Entrar</span>
-      <div class="topoCadLogin">
-        <span class="registrar">Não tem Login?</span>
-        <span class="entrar" onclick="loginSome()">Faça seu Cadastro</span>
-      </div>
-      <hr/>
-
-    <div class="cadItens">
-      <div class="inputCad">
-        <span id="iconeNome">
-          <img src="./assets/imgs/cadastroImg/user.png" alt="Nome do Usuário" />
-        </span>
-        <input
-          type="text"
-          name="name"
-          placeholder="Digite seu nome"
-          style="margin-bottom: 15px"
-        />
-        <span id="iconePassword">
-          <img src="./assets/imgs/cadastroImg/senha.png" alt="Senha" />
-        </span>
-        <input
-          class="senhaOnOff"
-          type="password"
-          name="password"
-          placeholder="Digite sua senha"
-        />
-        <div class="mostrarSenha">
-          <span>Mostrar senha</span>
-          <input onclick="mostrarSenha(this)" type="checkbox" id="checkbox" />
-          <div class="enviarCad">
-            <a href="./fluxocash.html" class="enviarCad">
-              <span>Entrar</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <script src="./bd/clienteBd.js"></script>
     <script src="./cadTransicao.js"></script>
   </body>
