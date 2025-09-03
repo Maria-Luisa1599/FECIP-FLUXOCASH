@@ -50,7 +50,7 @@ async function verificarCliente() {
       } else if (data[0].senha == senhaCliente) {
         console.log("Login efetuado com sucesso!");
         localStorage.setItem("usuarioLogado", data[0].nome);
-        window.location.replace('../fluxocash.html');
+        window.location.replace('../principais funcoes/fluxocash.html');
       } else {
         console.log("Senha errada!");
       }

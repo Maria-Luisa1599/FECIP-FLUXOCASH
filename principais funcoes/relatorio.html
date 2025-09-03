@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/relatorio..css" />
+  </head>
+  <body>
+    <!-- <div class="add_transacoes">
+      <div class="section">
+        <span>Valor</span>
+        <input type="number" name="valor" />
+      </div>
+      <div class="section">
+        <span>Tipo</span>
+        <select name="tipo">
+          <option value="option1">Ganho</option>
+          <option value="option2">Gasto</option>
+        </select>
+      </div>
+      <div class="section">
+        <span>Categoria</span>
+        <select name="tipo">
+          <option value="option1">Escola</option>
+          <option value="option2">Casa</option>
+        </select>
+      </div>
+    </div> -->
+
+    <div id="cartaoTransacao" class="add_transacoes">
+      <div class="conteudo_principal">
+        <div class="section">
+          <div>Valor</div>
+          <div>Tipo</div>
+          <div>Categoria</div>
+        </div>
+        <div class="section">
+          <input type="number" name="valor" />
+          <select name="tipo">
+            <option value="option1">Ganho</option>
+            <option value="option2">Gasto</option>
+          </select>
+          <select name="tipo">
+            <option value="option1">Escola</option>
+            <option value="option2">Casa</option>
+          </select>
+        </div>
+      </div>
+      <div class="transacoes_botoes">
+        <div class="transacoes_botoes-categoria">
+          <button id="btnCategoriaEntra">Criar categoria</button>
+        </div>
+        <div class="transacoes_botoes_sent">
+          <button id="btnCancelar">Cancelar</button>
+          <button>Enviar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cartaoCategoria" class="add_categoria">
+      <div class="conteudo_principal_categoria">
+        <div class="section">
+          <div class="span">Categoria:</div>
+        </div>
+        <div class="section">
+            <input type="text" name="categoria" />
+        </div>
+    </div>
+      <div class="transacoes_botoesCat">
+        <div class="transacoes_botoes_sent">
+          <button id="btnCategoriaSai">Voltar</button>
+          <button>Adicionar</button>
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <tr>
+        <th>Valor</th>
+        <th>Categoria</th>
+        <th>Data</th>
+      </tr>
+      <tr class="gastos">
+        <td>- R$ 100</td>
+        <td>Escola</td>
+        <td>01/01/25</td>
+      </tr>
+      <tr class="ganhos">
+        <td>+ R$ 200</td>
+        <td>Mega Senha</td>
+        <td>02/01/25</td>
+      </tr>
+      <tr class="texto_cor">
+        <td></td>
+        <td>Total:</td>
+        <td>R$ 100</td>
+      </tr>
+    </table>
+
+    <div>
+      <button id="btnAdicionar">Adicionar transação</button>
+    </div>
+    <script src="../transacoes.js"></script>
+  </body>
+</html>

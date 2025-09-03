@@ -117,9 +117,6 @@ hr{
   border-radius: 26px;
   background: #D7E5D8;
 }
-#nomeClienteLogin, #nomeCliente {
-  text-transform: uppercase;
-}
 #senhaClienteLogin, #senhaCliente {
   text-transform: none; 
 }
