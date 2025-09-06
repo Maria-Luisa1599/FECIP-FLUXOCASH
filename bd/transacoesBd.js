@@ -227,17 +227,21 @@ btnExcluir.onclick = async () => {
   const confirmado = await mostrarConfirmacao("Deseja realmente excluir essa transação?");
   if (!confirmado) return;
 
+  // Executa a exclusão no Supabase
   const { error } = await supabase
     .from("transacoes")
-    .update({ ativo: false })
+    .delete()
     .eq("id_transacao", transacao.id_transacao);
 
   if (error) return mostrarAlerta("Erro ao excluir: " + error.message);
 
-  trLinha.remove();
-  atualizarTotal();
+  // Fecha o card imediatamente
   cartaoEditar.style.display = "none";
+
+  // Recarrega as transações para atualizar a tabela e total
+  await carregarTransacoes();
 };
+
 
 
 }
@@ -293,7 +297,7 @@ btnAdicionarTransacao.addEventListener("click", async (e) => {
   if (!valor || !tipo || !categoriaId || !data) return mostrarAlerta(`Preencha todos os campos!`);
 
   const { error } = await supabase.from("transacoes").insert([
-    { valor, tipo, data, fk_categoria_id_categoria: categoriaId, ativo: true }
+    { valor, tipo, data, fk_categoria_id_categoria: categoriaId }
   ]);
 
   if (error) return alert("Erro ao salvar: " + error.message);
