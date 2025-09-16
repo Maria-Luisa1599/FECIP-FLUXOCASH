@@ -57,7 +57,7 @@ button {
 
 .add_transacoes {
   position: absolute;
-  top: 250px;
+  top: 150px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -106,7 +106,7 @@ button {
 
 .add_categoria {
     position: absolute;
-    top: 300px;
+    top: 250px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -128,7 +128,7 @@ button {
 .conteudo_principal_categoria input {
   height: 20px;
   padding: 5px;
-      text-transform: uppercase;
+  text-transform: uppercase;
 }
 .transacoes_botoesCat {
   display: flex;

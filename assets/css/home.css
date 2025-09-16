@@ -20,10 +20,23 @@ body {
   grid-template: "aside header header" 100px "aside main main" 210px /* 100 e 370 "aside main main" 441px / 350px;
   font-family: Arial;
 } */
+
+@media screen and (min-width: 481px) and (max-width: 800px) {
+    nav{
+    width: 4%;
+  }
+}
+@media screen and (min-width: 801px) and (max-width: 1140px){
+
+  nav{
+    width: 4%;
+  }
+}
+
 nav {
-  /* grid-area: aside; */ /* width: 30%; */
-  width: 4%;
   transition: .3s;
+  /* width: 5.5%; */
+  width: 4%;
   height: 100vh;
   position: fixed;
   display: flex;
@@ -34,7 +47,7 @@ nav {
   overflow: hidden;
 }
 nav:hover {
-  width: 20%;
+  width: 22%;
 
 }
 .btn-expandir {
@@ -48,7 +61,7 @@ nav:hover {
 .btn-expandir i {
   width: 30px;
   color: white;
-  font-size: 35px;
+  font-size: 30px;
   cursor: pointer;
 }
 .btn-expandir span {
@@ -58,7 +71,7 @@ nav:hover {
   /* width: 15%; */
   text-align: center;
   font-weight: 600;
-  font-size: 45px;
+  font-size: 40px;
   letter-spacing: 10px;
   color: white;
   margin-left: 30px;
@@ -80,7 +93,7 @@ ul li.item-menu a {
   display: flex;
   color: white;
   text-decoration: none;
-  font-size: 26px;
+  font-size: 22px;
   padding: 20px;
   line-height: 40px;
 }
@@ -88,7 +101,7 @@ ul li.item-menu a .txt-link {
   margin-left: 30px;
 }
 ul li.item-menu a .icon > i {
-  font-size: 30px;
+  font-size: 25px;
 } /* h1{ display: flex; align-items: center; font-weight: 600; font-size: 50px; letter-spacing: 10px; color: white; height: 90px; padding: 10px; margin-bottom: 15px; } */ /* .asideOpcao{ display: flex; flex-direction: column; width: 250px; width: 100%; height: 96%; } .asideOpcao span{ display: flex; justify-content: center; align-items: center; margin-bottom: 16px; font-weight: 500; font-size: 17px; padding: 10px; height: 45px; color: white; background-color:rgb(46, 97, 108); } .asideOpcao span:hover{ display: flex; justify-content: center; margin-bottom: 16px; font-weight: 500; font-size: 20px; padding: 10px; color: white; background-color:rgb(65, 116, 128); } */
 
 header {

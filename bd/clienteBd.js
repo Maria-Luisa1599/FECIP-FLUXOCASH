@@ -8,7 +8,8 @@ async function adicionarCliente() {
 
   if (error) {
     console.error("Erro ao adicionar:", error);
-  } else {
+  } 
+  else {
     console.log("Cliente cadastrado:", data);
     document.getElementById('nomeCliente').value = "";
     document.getElementById('senhaCliente').value = "";
@@ -48,6 +49,9 @@ async function verificarCliente() {
       if (data.length <= 0) {
         console.log("Cliente não cadastrado!");
       } else if (data[0].senha == senhaCliente) {
+        const usuario_id = data[0].id;
+        localStorage.setItem("usuario_id", data[0].id);
+
         console.log("Login efetuado com sucesso!");
         localStorage.setItem("usuarioLogado", data[0].nome);
         window.location.replace('../principais funcoes/fluxocash.html');

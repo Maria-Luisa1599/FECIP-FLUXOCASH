@@ -6,6 +6,7 @@ const supabase = createClient(
 );
 
 const body = document.querySelector("body");
+const usuario_id = localStorage.getItem("usuario_id");
 
 const tabela = document.querySelector(".listaTransacoes");
 const cartaoTransacao = document.getElementById("cartaoTransacao");
@@ -70,7 +71,10 @@ function mostrarConfirmacao(mensagem) {
 }
 
 async function carregarCategorias(selectEl = categoriaSelect, selectedId = null) {
-  const { data: categorias, error } = await supabase.from("categoria").select("*");
+  const { data: categorias, error } = await supabase
+  .from("categoria")
+  .select("*")
+  .eq("id_usuario", usuario_id);
   if (error) return console.error("Erro ao carregar categorias:", error);
 
   selectEl.innerHTML = "";
@@ -103,7 +107,7 @@ if (existente) return mostrarAlerta("Essa categoria já existe!");
 
   const { data: novaCat, error } = await supabase
     .from("categoria")
-    .insert([{ tipo: nomeFormatado }])
+    .insert([{ tipo: nomeFormatado, id_usuario: usuario_id}])
     .select();
 
   if (error) return alert("Erro ao criar categoria: " + error.message);
@@ -127,9 +131,11 @@ function atualizarTotal(transacoes) {
 }
 
 async function carregarTransacoes() {
+  console.log(usuario_id)
   const { data: transacoes, error } = await supabase
     .from("transacoes")
     .select("id_transacao, valor, tipo, data, fk_categoria_id_categoria, categoria:fk_categoria_id_categoria(*)")
+    .eq('id_usuario', usuario_id)
     .order("data", { ascending: false });
 
   if (error) return console.error("Erro ao carregar transações:", error);
@@ -156,7 +162,6 @@ async function carregarTransacoes() {
 
   atualizarTotal(transacoes);
 }
-
 
 function abrirEditar(transacao, trLinha) {
   const cartaoEditar = document.getElementById("cartaoEditar");
@@ -227,7 +232,6 @@ btnExcluir.onclick = async () => {
   const confirmado = await mostrarConfirmacao("Deseja realmente excluir essa transação?");
   if (!confirmado) return;
 
-  // Executa a exclusão no Supabase
   const { error } = await supabase
     .from("transacoes")
     .delete()
@@ -235,14 +239,10 @@ btnExcluir.onclick = async () => {
 
   if (error) return mostrarAlerta("Erro ao excluir: " + error.message);
 
-  // Fecha o card imediatamente
   cartaoEditar.style.display = "none";
 
-  // Recarrega as transações para atualizar a tabela e total
   await carregarTransacoes();
 };
-
-
 
 }
 const btnExcluirCategoria = document.getElementById("btnExcluirCategoria");
@@ -297,7 +297,7 @@ btnAdicionarTransacao.addEventListener("click", async (e) => {
   if (!valor || !tipo || !categoriaId || !data) return mostrarAlerta(`Preencha todos os campos!`);
 
   const { error } = await supabase.from("transacoes").insert([
-    { valor, tipo, data, fk_categoria_id_categoria: categoriaId }
+    { valor, tipo, data, fk_categoria_id_categoria: categoriaId, id_usuario: usuario_id}
   ]);
 
   if (error) return alert("Erro ao salvar: " + error.message);
@@ -328,7 +328,7 @@ btnFiltrar.addEventListener("click", async () => {
   });
   menuFiltrar.appendChild(btnTodas);
 
-  const { data: categorias } = await supabase.from("categoria").select("*");
+  const { data: categorias } = await supabase.from("categoria").select("*").eq("id_usuario", usuario_id);
 
   categorias.forEach(cat => {
     const btnCat = document.createElement("button");
@@ -349,6 +349,7 @@ async function filtrarTransacoes(idCategoria = null) {
   let query = supabase
     .from("transacoes")
     .select("id_transacao, valor, tipo, data, fk_categoria_id_categoria, categoria:fk_categoria_id_categoria(*)")
+    .eq("id_usuario", usuario_id)
     .order("data", { ascending: false });
 
   if (idCategoria) query = query.eq("fk_categoria_id_categoria", idCategoria);

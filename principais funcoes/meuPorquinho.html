@@ -66,7 +66,7 @@
       <main>
         <!-- Configuração da meta -->
         <div class="caixa">
-            <h1>Meu Porquinho</h1>
+          <h1>Meu Porquinho</h1>
           <label>Meta (R$):</label><br />
           <input type="number" id="meta" placeholder="Ex: 5000" /><br />
 
@@ -82,9 +82,9 @@
         </div>
 
         <!-- Cofrinho fictício -->
-        <div class="caixa">
+        <div class="caixa cofrinho">
           <h2>Seu Cofrinho</h2>
-          <div id="cofrinho">Total guardado: R$ 0,00</div>
+          <div id="totalCofrinho">Total guardado: R$ 0,00</div>
           <br />
 
           <input
@@ -97,6 +97,8 @@
         </div>
       </main>
     </header>
+    <script src="../bd/meuPorquinhoBd.js"></script>
+    <script type="module" src="../bd/meuPorquinhoBd.js"></script>
     <script>
       const usuario = localStorage.getItem("usuarioLogado");
       document.getElementById("nomeUserTela").textContent =
