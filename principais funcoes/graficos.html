@@ -64,71 +64,47 @@
         </div>
       </div>
       <main>
-        <!-- Configuração da meta
-        <div class="caixa">
-            <h1>Meu Porquinho</h1>
-          <label>Meta (R$):</label><br />
-          <input type="number" id="meta" placeholder="Ex: 5000" /><br />
+        <div class="ganhosEGastos">
+          <div class="bloco" id="blocoGastos">
+            <h2>Gastos do Mês</h2>
+            <canvas id="graficoGastos" width="600" height="350"></canvas>
+            <div class="opcoes">
+              <span class="botao ativo" data-tipo="pizza">Pizza</span>
+              <span class="botao" data-tipo="barras">Barras</span>
+              <span class="botao" data-tipo="linha">Linha</span>
+            </div>
+            <div class="inputs">
+              <label>Aluguel: <input type="number" value="200" /></label>
+              <label>Comida: <input type="number" value="150" /></label>
+              <label>Transporte: <input type="number" value="100" /></label>
+              <label>Lazer: <input type="number" value="50" /></label>
+            </div>
+          </div>
 
-          <label>Prazo (meses):</label><br />
-          <input type="number" id="prazo" placeholder="Ex: 12" /><br />
-
-          <label>Depósito mensal planejado (R$):</label><br />
-          <input type="number" id="mensal" placeholder="Ex: 300" /><br />
-
-          <button onclick="calcular()">Calcular</button>
-
-          <div id="resultado"></div>
+          <div class="bloco" id="blocoGanhos">
+            <h2>Ganhos do Mês</h2>
+            <canvas id="graficoGanhos" width="500" height="350"></canvas>
+            <div class="opcoes">
+              <span class="botao ativo" data-tipo="pizza">Pizza</span>
+              <span class="botao" data-tipo="barras">Barras</span>
+              <span class="botao" data-tipo="linha">Linha</span>
+            </div>
+            <div class="inputs">
+              <label>Salário: <input type="number" value="3000" /></label>
+              <label>Freelance: <input type="number" value="800" /></label>
+              <label>Investimentos: <input type="number" value="500" /></label>
+            </div>
+          </div>
         </div>
 
-         Cofrinho fictício
-        <div class="caixa">
-          <h2>Seu Cofrinho</h2>
-          <div id="cofrinho">Total guardado: R$ 0,00</div>
-          <br />
-
-          <input
-            type="number"
-            id="valorDeposito"
-            placeholder="Valor a depositar (R$)"
-          />
-          <br />
-          <button onclick="depositar()">Depositar</button>
+        <div class="bloco blocoAnual">
+          <h2>Comparativo Anual (Ganhos x Gastos)</h2>
+            <canvas id="graficoAnual" width="900" height="400"></canvas>
+            <div class="inputs" id="inputsAnual"></div>
         </div>
-
-                 Configuração da meta 
-        <div class="caixa">
-            <h1>Meu Porquinho</h1>
-          <label>Meta (R$):</label><br />
-          <input type="number" id="meta" placeholder="Ex: 5000" /><br />
-
-          <label>Prazo (meses):</label><br />
-          <input type="number" id="prazo" placeholder="Ex: 12" /><br />
-
-          <label>Depósito mensal planejado (R$):</label><br />
-          <input type="number" id="mensal" placeholder="Ex: 300" /><br />
-
-          <button onclick="calcular()">Calcular</button>
-
-          <div id="resultado"></div>
-        </div>
-
-         Cofrinho fictício 
-        <div class="caixa">
-          <h2>Seu Cofrinho</h2>
-          <div id="cofrinho">Total guardado: R$ 0,00</div>
-          <br />
-
-          <input
-            type="number"
-            id="valorDeposito"
-            placeholder="Valor a depositar (R$)"
-          />
-          <br />
-          <button onclick="depositar()">Depositar</button>
-        </div> -->
       </main>
     </header>
+    <script src="../bd/graficoBd.js"></script>
     <script>
       const usuario = localStorage.getItem("usuarioLogado");
       document.getElementById("nomeUserTela").textContent =

@@ -1,10 +1,5 @@
 body {
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* gap: 32px; */
-  /* justify-content: center; */
-  /* align-items: center; */
-  height: 100vh;
+  height: 120vh;
   font-family: arial;
   background-color: #336c77;
 }
@@ -15,14 +10,12 @@ main{
   gap: 32px;
   justify-content: center;
   align-items: center;
-  /* height: 100vh; */
 }
 
 table {
   width: 50%;
   height: 40%;
   text-align: center;
-  /* margin: auto; */
   background-color: white;
 }
 table,
@@ -66,12 +59,8 @@ button {
   width: 350px;
   height: 350px;
   border-radius: 5px;
-
-  /* começa invisível */
   opacity: 0;
   pointer-events: none;
-
-  /* fica acima visualmente */
 }
 
 .AnimacaoEntra {
@@ -139,7 +128,6 @@ button {
 .transacoes_botoesCat .transacoes_botoes_sent {
     margin-right: 13%;
     width: 54%;
-    /* padding: 2px; */
 }
 .transacoes_botoesCat button {
 
@@ -202,7 +190,6 @@ button {
   font-size: 18px;
   padding: 2px;
   margin-bottom: 30px;
-  /* margin-left: 8px; */
   width: 95%;
   color: white;
   background-color: #3b757f;
@@ -215,12 +202,9 @@ button {
   flex-direction: column;
   font-size: 15px;
   width: 100%;
-  /* background-color: blue; */
-  /* gap: 25px; */
 }
 .transacoes_botoes_sent {
   display: flex;
-  /* align-items: right; */
   justify-content: right;
   font-size: 15px;
   width: 97%;
@@ -253,11 +237,6 @@ button {
   color: #336c77;;
   font-size: 18px;
 }
-/* .botaoEditar{
-  background-color: transparent;
-  width: 100%;
-  /* cursor: pointer; 
-} */
 
 .overlay{
   position: fixed;
