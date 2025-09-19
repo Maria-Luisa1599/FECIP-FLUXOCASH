@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FluxoCash - Meu Porquinho</title>
+    <title>FluxoCash</title>
     <link rel="icon" href="../assets/imgs/favIcon.png" />
     <link rel="stylesheet" href="../assets/css/home.css" />
     <link rel="stylesheet" href="../principais funcoes/css/meuPorquinho.css" />
@@ -13,6 +13,16 @@
     />
   </head>
   <body>
+    <!-- inseri aqui igual está na cadastro.html -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+      const supabaseUrl = "https://chvaqdzgvfqtcfaccomy.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNodmFxZHpndmZxdGNmYWNjb215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMDU3ODIsImV4cCI6MjA3MDc4MTc4Mn0.0Wosp2gv_RfE1qVj4uClMSX3WmWLvpkqfLhe6Yhbw2I";
+      window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    </script>
+
     <nav class="menu-lateral">
       <div class="btn-expandir">
         <i class="bi bi-list"></i>
@@ -64,6 +74,7 @@
         </div>
       </div>
       <main>
+        <!-- Configuração da meta -->
         <div class="caixa">
           <h1>Meu Porquinho</h1>
           <label>Meta (R$):</label><br />
@@ -80,7 +91,8 @@
           <div id="resultado"></div>
         </div>
 
-        <div class="caixa cofrinho">
+        <!-- Cofrinho fictício -->
+        <div style="display: none;" class="caixa cofrinho">
           <h2>Seu Cofrinho</h2>
           <div id="totalCofrinho">Total guardado: R$ 0,00</div>
           <br />
@@ -92,6 +104,13 @@
           />
           <br />
           <button onclick="depositar()">Depositar</button>
+          <input
+            type="number"
+            id="valorRetirada"
+            placeholder="Valor a retirar (R$)"
+          />
+          <br />
+          <button onclick="retirar()">Retirar</button>
         </div>
       </main>
     </header>
