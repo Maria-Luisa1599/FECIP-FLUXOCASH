@@ -314,7 +314,12 @@ async function depositar() {
 
   // Calcula saldo e total guardado
   // totalGuardado += valor;
-
+ if (saldo >= meta) {
+      mostrarAlerta('Você atingiu a meta!')
+    }
+    else {
+      mostrarAlerta(`Faltam apenas ${meta-saldo} para você atingir sua meta.`)
+    }
   // Atualiza o total na tela
   document.getElementById("totalCofrinho").innerText =
     "Total guardado: R$ " + saldo.toFixed(2).replace(".", ",");
