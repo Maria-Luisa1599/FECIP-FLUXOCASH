@@ -1,32 +1,64 @@
 // Função para adicionar um novo cliente ao banco de dados
+function mostrarAlerta(mensagem) {
+  const overlay = document.createElement("div");
+  overlay.className = "alert-overlay";
+
+  overlay.innerHTML = `
+    <div class="alert-card">
+      <p>${mensagem}</p>
+      <button>OK</button>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  overlay.querySelector("button").addEventListener("click", () => overlay.remove());
+}
+
 async function adicionarCliente() {
-  // Captura o valor do input do nome do cliente
-  const nomeCliente = document.getElementById('nomeCliente').value;
+  const nomeCliente = document.getElementById('nomeCliente').value.trim();
+  const senhaCliente = document.getElementById('senhaCliente').value.trim();
 
-  // Captura o valor do input da senha do cliente
-  const senhaCliente = document.getElementById('senhaCliente').value;
+  // Verifica se os campos foram preenchidos
+  if (!nomeCliente || !senhaCliente) {
+    mostrarAlerta("Preencha todos os campos!");
+    return;
+  }
 
-  // Chama o Supabase para inserir um novo registro na tabela 'usuario'
-  // O método insert recebe um array de objetos, mesmo que seja apenas um
+  // Verifica se já existe um cliente com o mesmo nome e senha
+  const { data: usuariosExistentes, error: erroBusca } = await supabase
+    .from('usuario')
+    .select('*')
+    .eq('nome', nomeCliente)
+    .eq('senha', senhaCliente);
+
+  if (erroBusca) {
+    console.error("Erro ao verificar usuário:", erroBusca);
+    return;
+  }
+
+  if (usuariosExistentes.length > 0) {
+    mostrarAlerta("Já existe um usuário com esse nome e senha! Faça outro cadastro.");
+    return;
+  }
+
+  // Se não existe, faz o cadastro
   const { data, error } = await supabase
-    .from('usuario') // tabela onde será inserido o registro
-    .insert([{ nome: nomeCliente, senha: senhaCliente }]); // objeto com os campos e valores
+    .from('usuario')
+    .insert([{ nome: nomeCliente, senha: senhaCliente }]);
 
-  // Verifica se houve erro na inserção
   if (error) {
-    console.error("Erro ao adicionar:", error); // imprime o erro no console
-  } 
-  else {
-    console.log("Cliente cadastrado:", data); // imprime os dados do cliente cadastrado
+    console.error("Erro ao adicionar:", error);
+  } else {
+    mostrarAlerta("Cliente cadastrado", data);
 
-    // Limpa os campos de input após o cadastro
     document.getElementById('nomeCliente').value = "";
     document.getElementById('senhaCliente').value = "";
 
-    // Chama a função listarClientes para atualizar a lista de clientes
     listarClientes();
   }
 }
+
 
 // Função para listar todos os clientes cadastrados
 async function listarClientes() {
@@ -45,41 +77,51 @@ async function listarClientes() {
 
 // Função para verificar o login de um cliente
 async function verificarCliente() {
-  // Captura os valores dos inputs de login
-  const nomeCliente = document.getElementById('nomeClienteLogin').value;
-  const senhaCliente = document.getElementById('senhaClienteLogin').value;
+  const nomeCliente = document.getElementById('nomeClienteLogin').value.trim();
+  const senhaCliente = document.getElementById('senhaClienteLogin').value.trim();
 
-  // Verifica se os campos estão preenchidos
   if (!nomeCliente || !senhaCliente) {
-    console.log('Todos os campos precisam ser preenchidos'); // alerta caso algum campo esteja vazio
+    mostrarAlerta('Preencha todos os campos!');
+    return;
+  }
+
+  // 1) procura por registro com nome + senha (autenticação)
+  const { data: matches, error: errMatch } = await supabase
+    .from('usuario')
+    .select('*')
+    .match({ nome: nomeCliente, senha: senhaCliente });
+
+  if (errMatch) {
+    console.error('Erro ao buscar usuário:', errMatch);
+    return;
+  }
+
+  if (matches && matches.length > 0) {
+    // login bem-sucedido
+    const usuario = matches[0];
+    localStorage.setItem('usuario_id', usuario.id);
+    localStorage.setItem('usuarioLogado', usuario.nome);
+    // opcional: mostrarAlerta('Login efetuado com sucesso!');
+    window.location.replace('../principais funcoes/fluxocash.html');
+    return;
+  }
+
+  // 2) se não encontrou por nome+senha, verifica se o nome existe (para mostrar mensagem apropriada)
+  const { data: nomeExiste, error: errNome } = await supabase
+    .from('usuario')
+    .select('id')
+    .eq('nome', nomeCliente)
+    .limit(1);
+
+  if (errNome) {
+    console.error('Erro ao verificar nome:', errNome);
+    return;
+  }
+
+  if (nomeExiste && nomeExiste.length > 0) {
+    mostrarAlerta('Senha errada!');
   } else {
-    // Chama o Supabase para selecionar o cliente que tenha o nome informado
-    const { data, error } = await supabase
-      .from('usuario') // tabela onde a busca será realizada
-      .select('*') // seleciona todas as colunas
-      .eq('nome', nomeCliente); // filtra pelo nome do cliente
-
-    // Verifica se houve erro na consulta
-    if (error) {
-      console.error("Erro ao mostrar:", error); // imprime o erro no console
-    } else {
-      // Se não encontrou nenhum cliente com o nome informado
-      if (data.length <= 0) {
-        console.log("Cliente não cadastrado!");
-      } 
-      // Se encontrou o cliente, verifica se a senha está correta
-      else if (data[0].senha == senhaCliente) {
-        const usuario_id = data[0].id; // pega o id do usuário
-        localStorage.setItem("usuario_id", data[0].id); // salva o id no localStorage
-
-        console.log("Login efetuado com sucesso!");
-        localStorage.setItem("usuarioLogado", data[0].nome); // salva o nome do usuário logado
-
-        // Redireciona para a página principal do sistema
-        window.location.replace('../principais funcoes/fluxocash.html');
-      } else {
-        console.log("Senha errada!"); // alerta caso a senha esteja incorreta
-      }
-    }
+    mostrarAlerta('Cliente não cadastrado!');
   }
 }
+

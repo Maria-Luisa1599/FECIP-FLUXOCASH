@@ -75,7 +75,7 @@
       </div>
       <main>
         <!-- Configuração da meta -->
-        <div class="caixa">
+        <div class="caixa meta">
           <h1>Meu Porquinho</h1>
           <label>Meta (R$):</label><br />
           <input type="number" id="meta" placeholder="Ex: 5000" /><br />
@@ -92,25 +92,27 @@
         </div>
 
         <!-- Cofrinho fictício -->
-        <div style="display: none;" class="caixa cofrinho">
+        <div style="display: none" class="caixa cofrinho">
           <h2>Seu Cofrinho</h2>
           <div id="totalCofrinho">Total guardado: R$ 0,00</div>
           <br />
 
-          <input
-            type="number"
-            id="valorDeposito"
-            placeholder="Valor a depositar (R$)"
-          />
-          <br />
-          <button onclick="depositar()">Depositar</button>
-          <input
-            type="number"
-            id="valorRetirada"
-            placeholder="Valor a retirar (R$)"
-          />
-          <br />
-          <button onclick="retirar()">Retirar</button>
+          <div style="width: 100%">
+            <input
+              type="number"
+              id="valorDeposito"
+              placeholder="Valor a depositar (R$)"
+            />
+            <button onclick="depositar()">Depositar</button>
+          </div>
+          <div style="width: 100%">
+            <input
+              type="number"
+              id="valorRetirada"
+              placeholder="Valor a retirar (R$)"
+            />
+            <button onclick="retirar()">Retirar</button>
+          </div>
         </div>
       </main>
     </header>

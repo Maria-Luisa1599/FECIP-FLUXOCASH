@@ -12,6 +12,7 @@
 
 // Recupera do localStorage o ID do usuário logado (salvo no login)
 const usuario_id = localStorage.getItem("usuario_id");
+const usuario_meta = localStorage.getItem('usuario_meta');
 
 // Variável que armazena o total guardado manualmente (soma feita no frontend)
 let totalGuardado = 0;
@@ -20,6 +21,60 @@ let totalGuardado = 0;
 let meta = parseFloat(document.getElementById("meta").value);
 let prazo = parseInt(document.getElementById("prazo").value);
 let mensal = parseFloat(document.getElementById("mensal").value);
+
+window.onload = async function () {
+  console.log("Página carregada");
+
+  // Recupera do localStorage
+  const metaSalva = localStorage.getItem("meta");
+  const prazoSalvo = localStorage.getItem("prazo");
+  const mensalSalvo = localStorage.getItem("mensal");
+
+  // Recupera total guardado
+
+  totalGuardado = await pegarTotalCofrinho();
+  document.getElementById("totalCofrinho").innerText = 
+  "Total guardado: R$ " + totalGuardado.toFixed(2).replace(".", ",");
+
+  if (metaSalva && prazoSalvo && mensalSalvo) {
+    // Preenche inputs
+    document.getElementById("meta").value = metaSalva;
+    document.getElementById("prazo").value = prazoSalvo;
+    document.getElementById("mensal").value = mensalSalvo;
+
+    // Deixa readonly
+    document.getElementById("meta").setAttribute("readonly", true);
+    document.getElementById("prazo").setAttribute("readonly", true);
+    document.getElementById("mensal").setAttribute("readonly", true);
+
+    // Mostra cofrinho
+    document.querySelector(".cofrinho").style.display = "flex";
+    calcular();
+    document.getElementById("criarMeta").style.pointerEvents = "none";
+    document.getElementById("criarMeta").style.backgroundColor = "#1a353aff";
+  }
+}
+async function pegarTotalCofrinho() {
+  const { data, error } = await supabase
+    .from("cofre")
+    .select("saldo")
+    .eq("id_usuario", usuario_id)
+    .order("id", { ascending: false })
+    .limit(1);
+  
+  if (error) {
+    console.error("Erro ao buscar depósitos:", error);
+    return 0;
+  }
+
+  // Somatório dos depósitos
+  let total = data.reduce((acc, item) => acc + item.valorDeposito, 0);
+  console.log(data[0].saldo)
+  return data[0].saldo;
+}
+
+
+
 
 // Função que cria um alerta estilizado na tela
 async function mostrarAlerta(mensagem) {
@@ -75,11 +130,13 @@ async function calcular() {
 
   texto += `<br>💡 Se você aumentar para R$ ${sugestao.toFixed(2)} por mês, vai atingir em ${mesesComSugestao} meses. <br>`;
   texto += `<button id="criarMeta" style="margin-right: 30px;">Criar meta</button>`;
-  texto += `<button id="limparCampos">Limpar campos</button>`;
+  texto += `<button id="limparCampos">Redefinir meta</button>`;
 
   // Mostra o resultado no HTML
   document.getElementById("resultado").innerHTML = texto;
 
+  texto += `<br><br><strong>*apenas uma meta pode ser criada por vez.</strong>`;
+  document.getElementById("resultado").innerHTML = texto;
   // Botão para criar meta no banco
   document.getElementById("criarMeta").addEventListener("click", function () {
     // torna os inputs somente leitura
@@ -89,48 +146,84 @@ async function calcular() {
 
     // exibe o cofrinho escondido
     document.querySelector(".cofrinho").style.display = "flex";
-
-    // salva no banco
+    localStorage.setItem('meta', meta);
+    localStorage.setItem('prazo', prazo);
+    localStorage.setItem('mensal', mensal);
+    // salva no banco    
     criarMeta(meta, prazo)
     return mostrarAlerta("Meta criada!")
   });
 
   // Botão para limpar os campos e resetar
-  document.getElementById("limparCampos").addEventListener("click", function () {
+  document.getElementById("limparCampos").addEventListener("click", async function () {
     document.getElementById("meta").value = "";
     document.getElementById("prazo").value = "";
     document.getElementById("mensal").value = "";
     document.getElementById("resultado").innerHTML = "";
 
+    localStorage.removeItem("meta");
+    localStorage.removeItem("prazo");
+    localStorage.removeItem("mensal");
+    // localStorage.removeItem("meta");
+    document.querySelector(".cofrinho").style.display = "none";
+
     // remove o readonly dos inputs
     document.getElementById("meta").removeAttribute("readonly", true);
     document.getElementById("prazo").removeAttribute("readonly", false);
     document.getElementById("mensal").removeAttribute("readonly");
+    const { data, error } = await supabase
+      .from("meta")
+      .update({
+        ativo: false
+      })
+      .eq("id_usuario", usuario_id)
+
+    if (error) {
+      alert("Erro ao atualizar: " + error.message);
+      return;
+    }
+
   });
 }
 
-// Função que insere a meta no banco de dados
-async function criarMeta(meta, prazo) {
-    const { data, error } = await supabase
-      .from("meta")
-      .insert([{ id_usuario: usuario_id, meta, prazo }]); // insere a meta vinculada ao usuário
 
-    if (error) {
-      console.error("Erro ao adicionar:", error);
-    }
-    else {
-      console.log("Meta criada", data);
-    }
-}
-
-// Função que pega a meta ativa do banco
-async function pegarMeta() {
+async function verificarMeta() {
+  // Função que pega a meta ativa do banco
   let meta;
-  
+
   const { data, error } = await supabase
     .from("meta")
     .select('*')
     .eq('ativo', true) // busca apenas metas marcadas como ativas
+    .eq('id_usuario', usuario_id)
+
+  if (error) {
+    console.error("Erro ao recuperar dados:", error);
+  } else {
+    if (data.length > 0) {
+      console.log("Já existe uma meta");
+      meta = data[0].meta; // pega o valor da meta
+      document.querySelector(".cofrinho").style.display = "flex";
+      // meta = 0;
+    } else {
+      meta = data[0].meta; // pega o valor da meta
+      console.log("meta na função" + meta);
+      document.querySelector(".meta").style.display = "block";
+      return meta
+    }
+  }
+
+}
+// Função que pega a meta ativa do banco
+async function pegarMeta() {
+  let meta;
+
+  const { data, error } = await supabase
+    .from("meta")
+    .select('*')
+    .eq('ativo', true) // busca apenas metas marcadas como ativas
+    .eq('id_usuario', usuario_id)
+    .limit(1);
 
   if (error) {
     console.error("Erro ao recuperar dados:", error);
@@ -140,9 +233,25 @@ async function pegarMeta() {
       meta = 0;
     } else {
       meta = data[0].meta; // pega o valor da meta
-      console.log(meta);
-      return meta 
+      console.log("meta na função" + meta);
+      return meta
     }
+  }
+}
+
+// Função que insere a meta no banco de dados
+async function criarMeta(meta, prazo) {
+  const { data, error } = await supabase
+    .from("meta")
+    .insert([{ id_usuario: usuario_id, meta, prazo }]); // insere a meta vinculada ao usuário
+
+  if (error) {
+    console.error("Erro ao adicionar:", error);
+  }
+  else {
+    document.getElementById("criarMeta").style.pointerEvents = "none";
+    document.getElementById("criarMeta").style.backgroundColor = "#1a353aff";
+    console.log("Meta criada", data);
   }
 }
 
@@ -165,12 +274,11 @@ async function pegarSaldo() {
     } else {
       saldoAtual = data[0].saldo; // pega o valor de saldo
       console.log(saldoAtual);
-      return saldoAtual;
     }
+    return saldoAtual;
   }
 }
 
-// Função de depósito no cofrinho
 async function depositar() {
     let valor = parseFloat(document.getElementById("valorDeposito").value);
 
@@ -181,20 +289,19 @@ async function depositar() {
     }
 
     // chama funções assíncronas que retornam meta e saldo
-    let meta = pegarMeta(); // deveria ser await para funcionar corretamente
-    let saldoAtual = pegarSaldo(); // deveria ser await também
+    let meta = await pegarMeta(); 
+    let saldoAtual = await pegarSaldo(); 
     let saldo = saldoAtual + valor; // aqui ocorre erro se for Promise
 
-    console.log(meta)
-    console.log(saldoAtual)
-    console.log(saldo)
-    console.log('agora vou inserir no banco')
+    // console.log(meta)
+    // console.log(saldoAtual)
+    // console.log(saldo)
+    // console.log('agora vou inserir no banco')
 
     // insere no banco o depósito feito
     const { data, error } = await supabase
       .from("cofre")
-      .insert([{ id_usuario: usuario_id, saldo, tipo: 'deposito', valorDeposito: 'valor' }]);
-      // ⚠️ aqui o campo valorDeposito está como string 'valor' em vez de variável valor
+      .insert([{ id_usuario: usuario_id, saldo, tipo: 'deposito', valorDeposito: valor }]);
 
     // tratamento de erro ou sucesso
     if (error) {
@@ -204,16 +311,33 @@ async function depositar() {
       console.log("Deposito efetuado", data);
     }
 
-    // verifica se o saldo atingiu a meta
-    if (saldo >= meta) {
-      mostrarAlerta('Você atingiu a meta!')
-    }
-    else {
-      mostrarAlerta(`Faltam apenas ${meta-saldo} para você atingir sua meta.`)
-    }
+  // Calcula saldo e total guardado
+  totalGuardado += valor;
 
-    // atualiza o total guardado no frontend
-    totalGuardado += valor;
-    document.getElementById("totalCofrinho").innerText = "Total guardado: R$ " + totalGuardado.toFixed(2).replace(".", ",");
-    document.getElementById("valorDeposito").value = "";
+  // Atualiza o total na tela
+  document.getElementById("totalCofrinho").innerText =
+    "Total guardado: R$ " + totalGuardado.toFixed(2).replace(".", ",");
+
+  // Limpa input
+  document.getElementById("valorDeposito").value = "";
+}
+
+// Função de retirada no cofrinho (apenas cálculos, sem banco)
+function retirar() {
+  let valor = parseFloat(document.getElementById("valorRetirada").value);
+
+  if (isNaN(valor) || valor <= 0) {
+    mostrarAlerta("Digite um valor válido para retirar!");
+    return;
+  }
+
+  // Calcula saldo e total guardado
+  totalGuardado -= valor;
+
+  // Atualiza o total na tela
+  document.getElementById("totalCofrinho").innerText =
+    "Total guardado: R$ " + totalGuardado.toFixed(2).replace(".", ",");
+
+  // Limpa input
+  document.getElementById("valorRetirada").value = "";
 }
