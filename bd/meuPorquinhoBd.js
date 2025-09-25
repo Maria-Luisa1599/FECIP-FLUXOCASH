@@ -261,9 +261,10 @@ async function pegarSaldo() {
 
   const { data, error } = await supabase
     .from("cofre")
-    .select('*')
-    .eq('id_usuario', usuario_id) // filtra pelo usuário logado
-    .limit(1); // pega apenas 1 registro (o mais recente seria com orderBy + desc)
+    .select("saldo")
+    .eq("id_usuario", usuario_id)
+    .order("id", { ascending: false })
+    .limit(1);
 
   if (error) {
     console.error("Erro ao recuperar dados:", error);
@@ -312,31 +313,54 @@ async function depositar() {
     }
 
   // Calcula saldo e total guardado
-  totalGuardado += valor;
+  // totalGuardado += valor;
 
   // Atualiza o total na tela
   document.getElementById("totalCofrinho").innerText =
-    "Total guardado: R$ " + totalGuardado.toFixed(2).replace(".", ",");
+    "Total guardado: R$ " + saldo.toFixed(2).replace(".", ",");
 
   // Limpa input
   document.getElementById("valorDeposito").value = "";
 }
 
-// Função de retirada no cofrinho (apenas cálculos, sem banco)
-function retirar() {
-  let valor = parseFloat(document.getElementById("valorRetirada").value);
+async function retirar() {
+    let valor = parseFloat(document.getElementById("valorRetirada").value);
 
-  if (isNaN(valor) || valor <= 0) {
-    mostrarAlerta("Digite um valor válido para retirar!");
-    return;
-  }
+    // validação do valor digitado
+    if (isNaN(valor) || valor <= 0) {
+      mostrarAlerta("Digite um valor válido para retirar!");
+      return;
+    }
+
+    // chama funções assíncronas que retornam meta e saldo
+    let meta = await pegarMeta(); 
+    let saldoAtual = await pegarSaldo(); 
+    let saldo = saldoAtual - valor; // aqui ocorre erro se for Promise
+
+    // console.log(meta)
+    // console.log(saldoAtual)
+    // console.log(saldo)
+    // console.log('agora vou inserir no banco')
+
+    // insere no banco o depósito feito
+    const { data, error } = await supabase
+      .from("cofre")
+      .insert([{ id_usuario: usuario_id, saldo, tipo: 'retirada', valorDeposito: valor }]);
+
+    // tratamento de erro ou sucesso
+    if (error) {
+      console.error("Erro ao retirar:", error);
+    }
+    else {
+      console.log("Retirada efetuada", data);
+    }
 
   // Calcula saldo e total guardado
-  totalGuardado -= valor;
+  // totalGuardado += valor;
 
   // Atualiza o total na tela
   document.getElementById("totalCofrinho").innerText =
-    "Total guardado: R$ " + totalGuardado.toFixed(2).replace(".", ",");
+    "Total guardado: R$ " + saldo.toFixed(2).replace(".", ",");
 
   // Limpa input
   document.getElementById("valorRetirada").value = "";
