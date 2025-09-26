@@ -62,6 +62,9 @@
             alt="Imagem do Usuário"
           />
         </div>
+        <span class="logout">
+          <a href="../index.html"> Sair da conta </a>
+        </span>
       </div>
       <main>
         <div id="cartaoTransacao" class="add_transacoes">
@@ -107,8 +110,18 @@
           </div>
           <div class="transacoes_botoesCat">
             <div class="transacoes_botoes_sent">
-              <button id="btnCategoriaSai" style="padding: 4px; font-size: 15px;">Voltar</button>
-              <button id="btnExcluirCategoria" style="padding: 4px; font-size: 15px">Excluir</button>
+              <button
+                id="btnCategoriaSai"
+                style="padding: 4px; font-size: 15px"
+              >
+                Voltar
+              </button>
+              <button
+                id="btnExcluirCategoria"
+                style="padding: 4px; font-size: 15px"
+              >
+                Excluir
+              </button>
               <button style="padding: 4px; font-size: 15px">Adicionar</button>
             </div>
           </div>
@@ -156,11 +169,21 @@
           <tr></tr>
         </table>
 
-        <div style="display: flex; gap: 32px;">
+        <div style="display: flex; gap: 32px">
           <button id="btnAdicionar">Adicionar transação</button>
           <div>
             <button id="btnFiltrar">Filtrar por categoria</button>
-            <div id="menuFiltrar" style="display:none; position:absolute; background:#2E616C; border:1px solid #2E616C; padding:5px; z-index:10;"></div>
+            <div
+              id="menuFiltrar"
+              style="
+                display: none;
+                position: absolute;
+                background: #2e616c;
+                border: 1px solid #2e616c;
+                padding: 5px;
+                z-index: 10;
+              "
+            ></div>
           </div>
         </div>
         <!-- dentro main // transacoes e transacoes-->

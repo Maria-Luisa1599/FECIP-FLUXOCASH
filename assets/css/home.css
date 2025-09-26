@@ -82,6 +82,24 @@ header {
     width: 100%;
     background-color: #285862;
 }
+.dadosUser .logout{
+  width: 170px;
+  margin: 0 30px;
+    padding: 10px 20px;
+    font-size: 15px;
+    text-align: center;
+    /* width: 30%; */
+    border-radius: 8px;
+    background-color: #173B42;
+    color: white;
+    cursor: pointer;
+    /* height: 30px; */
+    /* transition: 0.2s; */
+}
+.dadosUser .logout a{
+  text-decoration: none;
+  color: white;
+}
 
 .dadosUser {
   display: flex;
