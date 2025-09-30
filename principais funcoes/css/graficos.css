@@ -1,84 +1,117 @@
+/* Estilo geral do body da página */
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-color: #336c77;
-  color: white;
+  font-family: Arial, sans-serif; /* Define a fonte do texto */
+  text-align: center;            /* Centraliza o texto horizontalmente */
+  background-color: #336c77;     /* Define o fundo em azul esverdeado */
+  color: white;                  /* Define a cor do texto como branco */
 }
+
+/* Container geral para ganhos e gastos */
 .ganhosEGastos {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50px;
+  /* display: flex;  → Está comentado, mas serviria para alinhar blocos lado a lado */
+  align-items: center;   /* Centralizaria itens verticalmente se o flex fosse ativado */
+  justify-content: center; /* Centralizaria itens horizontalmente (com flex) */
+  margin-top: 50px;     /* Espaço superior */
 }
+
+/* Estilo para os gráficos (canvas) */
 canvas {
-  margin: 20px 0;
-  border: 1px solid #ccc;
-  background: #fff;
+  margin: 20px 0;         /* Espaço em cima e embaixo */
+  border: 1px solid #ccc; /* Borda cinza clara */
+  background: #fff;       /* Fundo branco dentro do gráfico */
 }
+
+/* Bloco que agrupa cada seção (Ganhos ou Gastos) */
 .bloco {
-  margin-bottom: 70px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-bottom: 70px;       /* Espaço abaixo do bloco */
+  display: flex;             /* Usa flexbox */
+  flex-direction: column;    /* Itens ficam em coluna (um embaixo do outro) */
+  align-items: center;       /* Centraliza os itens horizontalmente */
 }
+
+/* Container das opções de tipos de gráfico (pizza, barras, linha) */
 .opcoes {
-  margin: 15px 0;
+  margin: 15px 0; /* Espaço em cima e embaixo */
 }
+
+/* Estilo dos botões que trocam o tipo de gráfico */
 .botao {
-  display: inline-block;
-  margin: 0 10px;
-  padding: 8px 15px;
-  border: 2px solid #2a5f6bff;
-  border-radius: 5px;
-  cursor: pointer;
-  user-select: none;
-  transition: 0.3s;
+  display: inline-block;          /* Faz o span se comportar como botão */
+  margin: 0 10px;                 /* Espaço entre os botões */
+  padding: 8px 15px;              /* Espaçamento interno (tamanho do botão) */
+  border: 2px solid #2a5f6bff;    /* Borda azulada */
+  border-radius: 5px;             /* Cantos arredondados */
+  cursor: pointer;                /* Cursor de mãozinha ao passar */
+  user-select: none;              /* Impede de selecionar o texto ao clicar */
+  transition: 0.3s;               /* Suaviza mudanças de estilo (hover, etc) */
 }
+
+/* Efeito ao passar o mouse nos botões */
 .botao:hover {
-  background: #ddd;
+  background: #ddd; /* Fundo cinza claro */
 }
+
+/* Classe para o botão ativo (selecionado) */
 .ativo {
-  background: #2e616c;
-  color: #fff;
+  background: #2e616c; /* Fundo azul petróleo */
+  color: #fff;         /* Texto branco */
 }
+
+/* Estilo da área que contém inputs (se houver no gráfico) */
 .inputs {
-  margin: 20px 0;
+  margin: 20px 0; /* Espaçamento em cima e embaixo */
 }
+
+/* Estilo dos campos input dentro da área de inputs */
 .inputs input {
-  width: 70px;
-  margin: 5px;
-  text-align: center;
+  width: 70px;        /* Largura fixa */
+  margin: 5px;        /* Espaço ao redor */
+  text-align: center; /* Texto centralizado no campo */
 }
+
+/* Estilo dos labels que acompanham os inputs */
 .inputs label {
-  margin-right: 10px;
+  margin-right: 10px; /* Espaço à direita */
 }
+
+/* REPETIÇÃO do estilo canvas (provavelmente duplicado sem querer) */
 canvas {
-  margin: 20px 25px;
-  border: 1px solid #ccc;
-  background: #fff;
+  margin: 20px 25px;      /* Espaço em cima e nas laterais */
+  border: 1px solid #ccc; /* Borda cinza clara */
+  background: #fff;       /* Fundo branco */
 }
+
+/* REPETIÇÃO do estilo do bloco */
 .bloco {
-  margin-bottom: 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-bottom: 50px;    /* Espaço abaixo do bloco */
+  display: flex;          /* Flexbox */
+  flex-direction: column; /* Itens em coluna */
+  align-items: center;    /* Centralizados */
 }
+
+/* REPETIÇÃO do container de botões */
 .opcoes {
   margin: 15px 0;
 }
+
+/* REPETIÇÃO do estilo de botão (mudança da borda e radius) */
 .botao {
   display: inline-block;
   margin: 0 10px;
   padding: 8px 15px;
-  border: 2px solid #333;
-  border-radius: 8px;
+  border: 2px solid #333;  /* Aqui está diferente: borda preta */
+  border-radius: 8px;      /* Mais arredondado */
   cursor: pointer;
   transition: 0.3s;
 }
+
+/* Efeito hover do botão (igual ao anterior) */
 .botao:hover {
   background: #ddd;
 }
+
+/* Estilo do botão ativo (diferente do primeiro ativo) */
 .ativo {
-  background: #333;
-  color: #fff;
+  background: #333; /* Fundo preto */
+  color: #fff;      /* Texto branco */
 }

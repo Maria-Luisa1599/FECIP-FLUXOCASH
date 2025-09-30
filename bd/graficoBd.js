@@ -46,14 +46,12 @@ async function iniciarGraficos() {
   inicializarBloco("blocoGastos", categorias, cores);
 }
 
-async function somarValoresTransacaoeCat() {
+async function somarValoresTransacaoeCat(tipo) {
   const { data: transacoes, error } = await supabase
     .from("transacoes")      // tabela 'transacoes'
     .select("*")            // seleciona todas as colunas
     .eq("id_usuario", usuario_id) // filtra apenas as categorias do usuário
   // .groupBy();
-
-    console.log("TRnasacoes:", transacoes);
 
   if (error) {
     console.error("Erro ao carregar transacoes:", error);
@@ -64,96 +62,86 @@ async function somarValoresTransacaoeCat() {
     .from("categoria")
     .select("*")
     .eq("id_usuario", usuario_id);
-    
-    // console.log("Categoriaaaaas:", categorias);
+
+  // console.log("Categoriaaaaas:", categorias);
   if (errorCategorias) {
     console.error("Erro ao carregar categorias:", errorCategorias);
     return;
   }
 
   const gastos = categorias
-    .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === "gasto"))
+    .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === tipo))
     .map(cat => cat.tipo);
 
-    
-const gastosPorCategoria = transacoes
-  .filter(tr => tr.tipo === "gasto") // só gastos
-  .reduce((acc, tr) => {
-    // acha a categoria correspondente
-    const categoria = categorias.find(cat => cat.id_categoria === tr.fk_categoria_id_categoria);
+  // separar em funções
 
-    if (categoria) {
-      // se ainda não existe, inicializa
-      if (!acc[categoria.tipo]) {
-        acc[categoria.tipo] = 0;
+  const valoresPorCategoria = transacoes
+    .filter(tr => tr.tipo === tipo) // só gastos
+    .reduce((acc, tr) => {
+      // acha a categoria correspondente
+      const categoria = categorias.find(cat => cat.id_categoria === tr.fk_categoria_id_categoria);
+
+      if (categoria) {
+        // se ainda não existe, inicializa
+        if (!acc[categoria.tipo]) {
+          acc[categoria.tipo] = 0;
+        }
+        // soma os valores
+        acc[categoria.tipo] += tr.valor;
       }
-      // soma os valores
-      acc[categoria.tipo] += tr.valor;
-    }
-    return acc;
-  }, {});
+      return acc;
+    }, {});
 
 
-const ganhosPorCategoria = transacoes
-  .filter(tr => tr.tipo === "ganho") // só gastos
-  .reduce((acc, tr) => {
-    // acha a categoria correspondente
-    const categoria = categorias.find(cat => cat.id_categoria === tr.fk_categoria_id_categoria);
+  // const ganhosPorCategoria = transacoes
+  //   .filter(tr => tr.tipo === tipo) // só gastos
+  //   .reduce((acc, tr) => {
+  //     // acha a categoria correspondente
+  //     const categoria = categorias.find(cat => cat.id_categoria === tr.fk_categoria_id_categoria);
 
-    if (categoria) {
-      // se ainda não existe, inicializa
-      if (!acc[categoria.tipo]) {
-        acc[categoria.tipo] = 0;
-      }
-      // soma os valores
-      acc[categoria.tipo] += tr.valor;
-    }
-    return acc;
-  }, {});
+  //     if (categoria) {
+  //       // se ainda não existe, inicializa
+  //       if (!acc[categoria.tipo]) {
+  //         acc[categoria.tipo] = 0;
+  //       }
+  //       // soma os valores
+  //       acc[categoria.tipo] += tr.valor;
 
-console.log(ganhosPorCategoria);
+  //     }
 
+  //     return acc;
 
+  //   }, {});
+
+  let dados = [];
+
+  if (tipo === "ganho") {
+    Object.entries(valoresPorCategoria).forEach(([categoria, soma]) => {
+      console.log(`Categoria: ${categoria} | Soma: ${soma}`);
+      dados.push(soma)
+      const graficoGanho = document.querySelector("#graficoGanho");
+
+      graficoGanho.innerHTML += `
+        <label><strong>${categoria}:</strong> ${soma.toFixed(2)}</label>`;
+      // <label> <strong>${categoria}:</strong>  ${soma.toFixed(2)}</label>`;
+      // return Array.from(inputs).map(input => parseFloat(input.value) || 0);
+
+    });
+  }
+  else {
+    Object.entries(valoresPorCategoria).forEach(([categoria, soma]) => {
+      console.log(`Categoria: ${categoria} | Soma: ${soma}`);
+      dados.push(soma)
+      const graficoGasto = document.querySelector("#graficoGasto");
+
+      graficoGasto.innerHTML += `
+        <label><strong>${categoria}:</strong> ${soma.toFixed(2)}</label>`;
+
+    });
+  }
+
+  return dados;
 }
-
-
-// async function ValoresCategoria() {
-//   // const usuario_id = localStorage.getItem("usuario_id");
-
-
-
-//   const { data: transacoes, error: errorTransacoes } = await supabase
-//     .from("transacoes")
-//     .select("tipo, fk_categoria_id_categoria")
-//     .eq("id_usuario", usuario_id);
-//   if (errorTransacoes) {
-//     console.error("Erro ao carregar transações:", errorTransacoes);
-//     return;
-//   }
-
-//   console.log("Transações:", transacoes);
-
-//   const nomesGastos = categorias
-//     .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === "gasto"))
-//     .map(cat => cat.tipo);
-
-//   const nomesGanhos = categorias
-//     .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === "ganho"))
-//     .map(cat => cat.tipo);
-
-//   console.log("Categorias Gasto:", nomesGastos);
-//   console.log("Categorias Ganho:", nomesGanhos);
-
-//   if (nomesGastos.length > 0) {
-//     inicializarBloco("blocoGastos", nomesGastos, ["#ff6384", "#36a2eb", "#ffcd56", "#4caf50"]);
-//   }
-
-//   if (nomesGanhos.length > 0) {
-//     inicializarBloco("blocoGanhos", nomesGanhos, ["#4caf50", "#36a2eb", "#ffcd56"]);
-//   }
-
-
-// }
 
 // Função que desenha a legenda do gráfico
 function desenharLegenda(ctx, categorias, cores, xOffset = 0) {
@@ -274,14 +262,14 @@ function inicializarBloco(blocoId, categorias, cores, maxValor = 1500) {
 
   let tipoAtual = "pizza"; // tipo inicial do gráfico
 
-  // Função que pega os dados atuais dos inputs
-  function getDados() {
-    return Array.from(inputs).map(input => parseFloat(input.value) || 0);
-  }
+  // descobre se é gasto ou ganho
+  const tipoTransacao = blocoId.includes("Gastos") ? "gasto" : "ganho";
 
   // Função que desenha o gráfico conforme o tipo selecionado
-  function desenharGrafico(tipo) {
-    let dados = getDados();
+  async function desenharGrafico(tipo) {
+    let dados = await somarValoresTransacaoeCat(tipoTransacao); // passa "gasto" ou "ganho"
+    console.log("dados carregados:", dados);
+
     ctx.clearRect(0, 0, canvas.width, canvas.height); // limpa o canvas
 
     if (tipo === "pizza") {
@@ -297,8 +285,8 @@ function inicializarBloco(blocoId, categorias, cores, maxValor = 1500) {
   // Adiciona eventos aos botões para trocar tipo de gráfico
   botoes.forEach(botao => {
     botao.addEventListener("click", () => {
-      botoes.forEach(b => b.classList.remove("ativo")); // remove ativo dos outros botões
-      botao.classList.add("ativo"); // adiciona ativo ao botão clicado
+      botoes.forEach(b => b.classList.remove("ativo"));
+      botao.classList.add("ativo");
       let novoTipo = botao.getAttribute("data-tipo");
       desenharGrafico(novoTipo);
     });
@@ -311,8 +299,10 @@ function inicializarBloco(blocoId, categorias, cores, maxValor = 1500) {
     });
   });
 
-  desenharGrafico(tipoAtual); // desenha gráfico inicial
+  // desenha gráfico inicial
+  desenharGrafico(tipoAtual);
 }
+
 
 // Função que inicializa o gráfico anual com ganhos e gastos por mês
 // function inicializarBlocoAnual() {
@@ -449,11 +439,12 @@ async function carregarCategorias() {
   console.log("Categorias Ganho:", nomesGanhos);
 
   if (nomesGastos.length > 0) {
-    inicializarBloco("blocoGastos", nomesGastos, ["#ff6384", "#36a2eb", "#ffcd56", "#4caf50"]);
-  }
+    inicializarBloco("blocoGastos", nomesGastos, ["#ff6384", "#36a2eb", "#ffcd56", "#4caf50", "#9C27B0", "#FF9800", "#795548", "#009688"]);
+  } "#FF6384", "#36A2EB", "#FFCE56", "#4CAF50",
+    "#9C27B0", "#FF9800", "#795548", "#009688"
 
   if (nomesGanhos.length > 0) {
-    inicializarBloco("blocoGanhos", nomesGanhos, ["#4caf50", "#36a2eb", "#ffcd56"]);
+    inicializarBloco("blocoGanhos", nomesGanhos, ["#4caf50", "#36a2eb", "#ffcd56","#9C27B0", "#FF9800", "#795548", "#009688"]);
   }
 
   // inicializarBlocoAnual();

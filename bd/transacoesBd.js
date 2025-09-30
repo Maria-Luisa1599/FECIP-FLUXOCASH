@@ -1,26 +1,26 @@
-// Importa a biblioteca do Supabase direto do CDN
+// Importa a biblioteca do Supabase diretamente do CDN
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-// Cria o cliente Supabase com a URL do projeto e a chave pública (anon key)
+// Cria o cliente Supabase usando a URL do projeto e a chave pública (anon key)
 const supabase = createClient(
-  "https://chvaqdzgvfqtcfaccomy.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNodmFxZHpndmZxdGNmYWNjb215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMDU3ODIsImV4cCI6MjA3MDc4MTc4Mn0.0Wosp2gv_RfE1qVj4uClMSX3WmWLvpkqfLhe6Yhbw2I"
+  "https://chvaqdzgvfqtcfaccomy.supabase.co", // URL do projeto Supabase
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNodmFxZHpndmZxdGNmYWNjb215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMDU3ODIsImV4cCI6MjA3MDc4MTc4Mn0.0Wosp2gv_RfE1qVj4uClMSX3WmWLvpkqfLhe6Yhbw2I" // chave anon
 );
 
-// Recupera o ID do usuário armazenado no navegador (localStorage)
+// Recupera o ID do usuário que foi armazenado no navegador (localStorage)
 const usuario_id = localStorage.getItem("usuario_id");
 
-// Seleciona elementos principais do HTML
-const body = document.querySelector("body");
-const tabela = document.querySelector(".listaTransacoes");
-const cartaoTransacao = document.getElementById("cartaoTransacao");
-const cartaoCategoria = document.getElementById("cartaoCategoria");
+// Seleciona elementos principais do HTML para manipulação
+const body = document.querySelector("body"); // corpo da página
+const tabela = document.querySelector(".listaTransacoes"); // tabela de transações
+const cartaoTransacao = document.getElementById("cartaoTransacao"); // card de transação
+const cartaoCategoria = document.getElementById("cartaoCategoria"); // card de categoria
 
 // Inputs e botões do cartão de categoria
-const inputNovaCategoria = cartaoCategoria.querySelector("input[name='categoria']");
-const btnAdicionarCategoria = cartaoCategoria.querySelector("button:last-child");
-const btnCategoriaSai = document.getElementById("btnCategoriaSai");
-const btnCategoriaEntra = document.getElementById("btnCategoriaEntra");
+const inputNovaCategoria = cartaoCategoria.querySelector("input[name='categoria']"); // input de nova categoria
+const btnAdicionarCategoria = cartaoCategoria.querySelector("button:last-child"); // botão para adicionar categoria
+const btnCategoriaSai = document.getElementById("btnCategoriaSai"); // botão fechar card categoria
+const btnCategoriaEntra = document.getElementById("btnCategoriaEntra"); // botão abrir card categoria
 
 // Botão de adicionar transação
 const btnAdicionarTransacao = document.querySelector(".transacoes_botoes_sent button[type='submit']");
@@ -29,15 +29,16 @@ const btnAdicionarTransacao = document.querySelector(".transacoes_botoes_sent bu
 const tipoSelect = cartaoTransacao.querySelector("select[name='tipo']");
 const categoriaSelect = cartaoTransacao.querySelector("select[name='categoria']");
 
-// Mostra/oculta o card de categoria
+// Mostrar/ocultar card de categoria ao clicar nos botões
 btnCategoriaEntra.addEventListener("click", () => cartaoCategoria.style.display = "block");
 btnCategoriaSai.addEventListener("click", () => cartaoCategoria.style.display = "none");
 
 // Função para mostrar alertas personalizados
 function mostrarAlerta(mensagem) {
-  const overlay = document.createElement("div");
+  const overlay = document.createElement("div"); // cria um overlay para o alerta
   overlay.className = "alert-overlay";
 
+  // HTML do alerta
   overlay.innerHTML = `
     <div class="alert-card">
       <p>${mensagem}</p>
@@ -45,15 +46,16 @@ function mostrarAlerta(mensagem) {
     </div>
   `;
 
-  document.body.appendChild(overlay);
+  document.body.appendChild(overlay); // adiciona overlay ao body
 
+  // Fecha o alerta ao clicar em OK
   overlay.querySelector("button").addEventListener("click", () => overlay.remove());
 }
 
 // Função para mostrar confirmação (Sim/Não) usando Promise
 function mostrarConfirmacao(mensagem) {
   return new Promise((resolve) => {
-    const overlay = document.createElement("div");
+    const overlay = document.createElement("div"); // cria overlay
     overlay.className = "alert-overlay";
 
     overlay.innerHTML = `
@@ -68,13 +70,13 @@ function mostrarConfirmacao(mensagem) {
 
     document.body.appendChild(overlay);
 
-    // Se clicar em "Sim", retorna true
+    // Se clicar "Sim", resolve com true
     overlay.querySelector("#simBtn").addEventListener("click", () => {
       resolve(true);
       overlay.remove();
     });
 
-    // Se clicar em "Não", retorna false
+    // Se clicar "Não", resolve com false
     overlay.querySelector("#naoBtn").addEventListener("click", () => {
       resolve(false);
       overlay.remove();
@@ -82,22 +84,22 @@ function mostrarConfirmacao(mensagem) {
   });
 }
 
-// Carrega categorias do banco e preenche o <select>
+// Função para carregar categorias do banco e preencher o <select>
 async function carregarCategorias(selectEl = categoriaSelect, selectedId = null) {
   const { data: categorias, error } = await supabase
     .from("categoria")
     .select("*")
-    .eq("id_usuario", usuario_id);
+    .eq("id_usuario", usuario_id); // filtra apenas as categorias do usuário
 
   if (error) return console.error("Erro ao carregar categorias:", error);
 
-  selectEl.innerHTML = "";
+  selectEl.innerHTML = ""; // limpa options existentes
   categorias.forEach(cat => {
     const option = document.createElement("option");
     option.value = cat.id_categoria;
     option.textContent = cat.tipo;
 
-    // Se foi passado um "selectedId", marca a categoria correta
+    // Se foi passado selectedId, seleciona automaticamente
     if (selectedId && cat.id_categoria === selectedId) option.selected = true;
 
     selectEl.appendChild(option);
@@ -106,13 +108,13 @@ async function carregarCategorias(selectEl = categoriaSelect, selectedId = null)
 
 // Evento para adicionar nova categoria
 btnAdicionarCategoria.addEventListener("click", async (e) => {
-  e.preventDefault();
+  e.preventDefault(); // previne envio do form
 
   // Pega e normaliza o nome digitado
   let nomeCategoria = inputNovaCategoria.value.trim().toLowerCase();
   if (!nomeCategoria) return mostrarAlerta("Digite o nome da categoria!");
 
-  // Verifica se já existe categoria igual no banco
+  // Verifica se categoria já existe
   const { data: existente } = await supabase
     .from("categoria")
     .select("id_categoria")
@@ -121,10 +123,10 @@ btnAdicionarCategoria.addEventListener("click", async (e) => {
 
   if (existente) return mostrarAlerta("Essa categoria já existe!");
 
-  // Formata o nome com a primeira letra maiúscula
+  // Formata com primeira letra maiúscula
   const nomeFormatado = nomeCategoria.charAt(0).toUpperCase() + nomeCategoria.slice(1);
 
-  // Insere a nova categoria no banco
+  // Insere nova categoria no banco
   const { data: novaCat, error } = await supabase
     .from("categoria")
     .insert([{ tipo: nomeFormatado, id_usuario: usuario_id }])
@@ -132,45 +134,47 @@ btnAdicionarCategoria.addEventListener("click", async (e) => {
 
   if (error) return alert("Erro ao criar categoria: " + error.message);
 
-  // Atualiza lista e limpa input
+  // Atualiza lista, limpa input e fecha card
   carregarCategorias();
   inputNovaCategoria.value = "";
   cartaoCategoria.style.display = "none";
   mostrarAlerta(`Categoria "${nomeFormatado}" adicionada!`);
 });
 
-// Atualiza o total (ganhos - gastos)
+// Função para atualizar o total de ganhos e gastos
 function atualizarTotal(transacoes) {
-  const totalRow = tabela.querySelector(".texto_cor");
+  const totalRow = tabela.querySelector(".texto_cor"); // linha do total
   let total = 0;
 
+  // Calcula total somando ganhos e subtraindo gastos
   transacoes.forEach(tran => {
     if (tran.tipo === "ganho") total += tran.valor;
     else if (tran.tipo === "gasto") total -= tran.valor;
   });
 
-  totalRow.querySelector("td:last-child").textContent = `R$ ${total.toFixed(2)}`;
+  totalRow.querySelector("td:last-child").textContent = `R$ ${total.toFixed(2)}`; // exibe total
 }
 
-// Carrega transações do banco e preenche tabela
+// Função para carregar transações do banco e preencher tabela
 async function carregarTransacoes() {
   console.log(usuario_id)
   const { data: transacoes, error } = await supabase
     .from("transacoes")
     .select("id_transacao, valor, tipo, data, fk_categoria_id_categoria, categoria:fk_categoria_id_categoria(*)")
     .eq('id_usuario', usuario_id)
-    .order("data", { ascending: false });
+    .order("data", { ascending: false }); // ordena pela data desc
 
   if (error) return console.error("Erro ao carregar transações:", error);
 
   const totalRow = tabela.querySelector(".texto_cor");
-  // Remove linhas antigas antes de recarregar
+
+  // Remove linhas antigas de ganhos e gastos
   Array.from(tabela.querySelectorAll("tr.ganhos, tr.gastos")).forEach(tr => tr.remove());
 
-  // Insere cada transação como uma linha <tr>
+  // Insere transações na tabela
   transacoes.forEach(transacao => {
     const tr = document.createElement("tr");
-    tr.className = transacao.tipo === "ganho" ? "ganhos" : "gastos";
+    tr.className = transacao.tipo === "ganho" ? "ganhos" : "gastos"; // adiciona classe
     const dataFormatada = new Date(transacao.data).toLocaleDateString("pt-BR");
 
     tr.innerHTML = `
@@ -180,20 +184,20 @@ async function carregarTransacoes() {
       <td class="colunaEditarBotao">Editar</td>
     `;
 
-    // Ao clicar em "Editar", abre o card de edição
+    // Clique em editar abre card de edição
     tr.querySelector(".colunaEditarBotao").addEventListener("click", () => abrirEditar(transacao, tr));
 
     totalRow.insertAdjacentElement("beforebegin", tr);
   });
 
-  atualizarTotal(transacoes);
+  atualizarTotal(transacoes); // atualiza total
 }
 
-// Função para abrir o card de edição de transação
+// Função para abrir o card de edição de uma transação
 function abrirEditar(transacao, trLinha) {
   const cartaoEditar = document.getElementById("cartaoEditar");
 
-  // Inputs dentro do cartão de edição
+  // Inputs do card de edição
   const inputValor = cartaoEditar.querySelector("input[name='valor']");
   const selectTipo = cartaoEditar.querySelector("select[name='tipo']");
   const selectCategoria = cartaoEditar.querySelector("select[name='categoria']");
@@ -202,23 +206,23 @@ function abrirEditar(transacao, trLinha) {
   const btnAtualizar = cartaoEditar.querySelector("#btnAtualizar");
   const btnExcluir = cartaoEditar.querySelector("#btnExcluir");
 
-  // Preenche os campos com os dados atuais da transação
+  // Preenche campos com valores atuais da transação
   inputValor.value = transacao.valor;
   selectTipo.value = transacao.tipo;
-  inputData.value = transacao.data.split("T")[0];
+  inputData.value = transacao.data.split("T")[0]; // formata data
 
-  carregarCategorias(selectCategoria, transacao.categoria?.id_categoria);
+  carregarCategorias(selectCategoria, transacao.categoria?.id_categoria); // carrega categorias
 
-  cartaoEditar.style.display = "block";
+  cartaoEditar.style.display = "block"; // mostra card
   cartaoEditar.style.opacity = 1;
   cartaoEditar.style.pointerEvents = "all";
 
-  // Botão cancelar: apenas fecha
+  // Cancelar edição fecha card
   btnCancelarEditar.onclick = () => {
     cartaoEditar.style.display = "none";
   };
 
-  // Botão atualizar: salva edição no banco
+  // Atualizar transação no banco
   btnAtualizar.onclick = async (e) => {
     e.preventDefault();
 
@@ -249,7 +253,7 @@ function abrirEditar(transacao, trLinha) {
       return;
     }
 
-    // Atualiza os valores na tabela sem recarregar toda a página
+    // Atualiza linha da tabela
     trLinha.children[0].textContent = `${novoTipo === "ganho" ? "+ " : "- "} R$ ${novoValor.toFixed(2)}`;
     trLinha.children[1].textContent = data.categoria?.tipo || "";
     trLinha.children[2].textContent = novaData;
@@ -259,7 +263,7 @@ function abrirEditar(transacao, trLinha) {
     await carregarTransacoes();
   };
 
-  // Botão excluir: deleta a transação
+  // Excluir transação
   btnExcluir.onclick = async () => {
     const confirmado = await mostrarConfirmacao("Deseja realmente excluir essa transação?");
     if (!confirmado) return;
@@ -275,29 +279,26 @@ function abrirEditar(transacao, trLinha) {
     await carregarTransacoes();
   };
 }
-// Botão para excluir uma categoria existente
+
+// Botão para excluir categoria
 const btnExcluirCategoria = document.getElementById("btnExcluirCategoria");
 
 btnExcluirCategoria.addEventListener("click", async () => {
-  // Pega o valor digitado no input de categoria
-  const nomeCategoria = inputNovaCategoria.value.trim();
+  const nomeCategoria = inputNovaCategoria.value.trim(); // pega nome
   if (!nomeCategoria) return mostrarAlerta("Digite o nome da categoria que deseja excluir!");
 
-  // Confirmação antes de excluir
   const confirmado = await mostrarConfirmacao(`Tem certeza que deseja excluir a categoria "${nomeCategoria}"?`);
   if (!confirmado) return;
 
-  // Busca a categoria no banco pelo nome
   const { data: cat, error } = await supabase
     .from("categoria")
     .select("*")
-    .ilike("tipo", nomeCategoria) // busca sem diferenciar maiúsculas/minúsculas
+    .ilike("tipo", nomeCategoria)
     .maybeSingle();
 
   if (error) return mostrarAlerta("Erro ao buscar categoria: " + error.message);
   if (!cat) return mostrarAlerta("Categoria não encontrada!");
 
-  // Exclui a categoria pelo id
   const { error: delError } = await supabase
     .from("categoria")
     .delete()
@@ -305,19 +306,15 @@ btnExcluirCategoria.addEventListener("click", async () => {
 
   if (delError) return mostrarAlerta("Erro ao excluir categoria: " + delError.message);
 
-  // Feedback de sucesso
-  mostrarAlerta(`Categoria "${nomeCategoria}" excluída!`, { tipo: "sucesso" });
+  mostrarAlerta(`Categoria "${nomeCategoria}" excluída!`);
 
-  // Limpa campo e fecha o modal de categorias
   inputNovaCategoria.value = "";
   cartaoCategoria.style.display = "none";
 
-  // Atualiza selects de categoria em todo o sistema
   atualizarTodosSelects();
 });
 
-
-// Atualiza todos os <select> de categoria (ex: no cadastro e na edição de transação)
+// Atualiza todos os selects de categoria
 async function atualizarTodosSelects() {
   const selects = document.querySelectorAll("select[name='categoria']");
   selects.forEach(async (sel) => {
@@ -325,48 +322,39 @@ async function atualizarTodosSelects() {
   });
 }
 
-
-// Botão para adicionar uma transação
+// Adicionar nova transação
 btnAdicionarTransacao.addEventListener("click", async (e) => {
   e.preventDefault();
 
-  // Pega valores do formulário
   const valor = parseFloat(cartaoTransacao.querySelector("input[name='valor']").value);
-  const tipo = tipoSelect.value === "option1" ? "ganho" : "gasto"; // Define se é ganho ou gasto
+  const tipo = tipoSelect.value === "option1" ? "ganho" : "gasto";
   const categoriaId = parseInt(categoriaSelect.value);
   const data = cartaoTransacao.querySelector("input[name='data']").value;
 
-  // Validação de campos
   if (!valor || !tipo || !categoriaId || !data) return mostrarAlerta(`Preencha todos os campos!`);
 
-  // Insere a transação no banco
   const { error } = await supabase.from("transacoes").insert([
     { valor, tipo, data, fk_categoria_id_categoria: categoriaId, id_usuario: usuario_id}
   ]);
 
   if (error) return alert("Erro ao salvar: " + error.message);
 
-  // Recarrega lista de transações
   carregarTransacoes();
 
-  // Limpa formulário
   cartaoTransacao.querySelector("input[name='valor']").value = "";
   cartaoTransacao.querySelector("input[name='data']").value = "";
   tipoSelect.selectedIndex = 0;
   categoriaSelect.selectedIndex = 0;
 });
 
-
-// Botão para abrir o menu de filtros
+// Botão para abrir menu de filtros
 const btnFiltrar = document.getElementById("btnFiltrar");
 const menuFiltrar = document.getElementById("menuFiltrar");
 
 btnFiltrar.addEventListener("click", async () => {
-  // Mostra/oculta o menu de filtro
   menuFiltrar.style.display = menuFiltrar.style.display === "block" ? "none" : "block";
   menuFiltrar.innerHTML = "";
 
-  // Botão para mostrar todas as categorias
   const btnTodas = document.createElement("button");
   btnTodas.textContent = "Todas as categorias";
   btnTodas.style.display = "block";
@@ -378,10 +366,8 @@ btnFiltrar.addEventListener("click", async () => {
   });
   menuFiltrar.appendChild(btnTodas);
 
-  // Busca todas as categorias do usuário no banco
   const { data: categorias } = await supabase.from("categoria").select("*").eq("id_usuario", usuario_id);
 
-  // Cria um botão para cada categoria
   categorias.forEach(cat => {
     const btnCat = document.createElement("button");
     btnCat.textContent = cat.tipo;
@@ -396,7 +382,6 @@ btnFiltrar.addEventListener("click", async () => {
   });
 });
 
-
 // Função para filtrar transações por categoria
 async function filtrarTransacoes(idCategoria = null) {
   let query = supabase
@@ -405,18 +390,14 @@ async function filtrarTransacoes(idCategoria = null) {
     .eq("id_usuario", usuario_id)
     .order("data", { ascending: false });
 
-  // Se for passado um idCategoria, filtra só ela
   if (idCategoria) query = query.eq("fk_categoria_id_categoria", idCategoria);
 
-  // Executa a query
   const { data: transacoes, error } = await query;
   if (error) return mostrarAlerta("Erro ao carregar transações: " + error.message);
 
-  // Limpa as linhas da tabela (menos o total)
   const totalRow = tabela.querySelector(".texto_cor");
   Array.from(tabela.querySelectorAll("tr.ganhos, tr.gastos")).forEach(tr => tr.remove());
 
-  // Insere as transações filtradas na tabela
   transacoes.forEach(transacao => {
     const tr = document.createElement("tr");
     tr.className = transacao.tipo === "ganho" ? "ganhos" : "gastos";
@@ -429,18 +410,15 @@ async function filtrarTransacoes(idCategoria = null) {
       <td class="colunaEditarBotao">Editar</td>
     `;
 
-    // Ao clicar em editar abre o cartão de edição
     tr.querySelector(".colunaEditarBotao").addEventListener("click", () => abrirEditar(transacao, tr));
 
     totalRow.insertAdjacentElement("beforebegin", tr);
   });
 
-  // Atualiza o total da tabela
   atualizarTotal(transacoes);
 }
 
-
-// Carrega os dados iniciais ao abrir a página
+// Carrega dados iniciais ao abrir a página
 filtrarTransacoes();
 carregarCategorias();
 carregarTransacoes();

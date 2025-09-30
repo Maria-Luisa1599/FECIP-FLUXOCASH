@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
+    <!-- Define a codificação de caracteres para UTF-8 (acentos e caracteres especiais) -->
     <meta charset="UTF-8" />
+
+    <!-- Torna a página responsiva (escala em celulares/tablets) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Título que aparece na aba do navegador -->
     <title>FluxoCash - Gráficos</title>
+
+    <!-- Ícone que aparece na aba do navegador -->
     <link rel="icon" href="../assets/imgs/favIcon.png" />
+
+    <!-- Estilos principais da home -->
     <link rel="stylesheet" href="../assets/css/home.css" />
+
+    <!-- Estilos específicos da página de gráficos -->
     <link rel="stylesheet" href="../principais funcoes/css/graficos.css" />
+
+    <!-- Biblioteca de ícones Bootstrap Icons (para os ícones do menu e botões) -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     />
   </head>
+
   <body>
+    <!-- MENU LATERAL DE NAVEGAÇÃO -->
     <nav class="menu-lateral">
+      <!-- Botão para expandir/recolher o menu -->
       <div class="btn-expandir">
         <i class="bi bi-list"></i>
         <span>INÍCIO</span>
       </div>
+
+      <!-- Lista de itens do menu -->
       <ul>
+        <!-- Link para a página de transações -->
         <li class="item-menu">
           <a href="../principais funcoes/fluxocash.html">
             <span class="icon">
@@ -27,6 +46,8 @@
             <span class="txt-link"> Transações </span>
           </a>
         </li>
+
+        <!-- Link para a página de gráficos -->
         <li class="item-menu">
           <a href="../principais funcoes/graficos.html">
             <span class="icon">
@@ -35,6 +56,8 @@
             <span class="txt-link"> Gráficos </span>
           </a>
         </li>
+
+        <!-- Link para a página de relatórios -->
         <li class="item-menu">
           <a href="../principais funcoes/relatorio.html">
             <span class="icon">
@@ -43,6 +66,8 @@
             <span class="txt-link"> Relatórios </span>
           </a>
         </li>
+
+        <!-- Link para a página do cofrinho -->
         <li class="item-menu">
           <a href="../principais funcoes/meuPorquinho.html">
             <span class="icon">
@@ -53,57 +78,78 @@
         </li>
       </ul>
     </nav>
+
+    <!-- CABEÇALHO SUPERIOR -->
     <header>
       <div class="dadosUser">
+        <!-- Nome do usuário logado aparece aqui via JS -->
         <span id="nomeUserTela"></span>
+
+        <!-- Avatar/Imagem do usuário -->
         <div>
           <img
             src="../assets/imgs/mainImg/userImg.png"
             alt="Imagem do Usuário"
           />
         </div>
+
+        <!-- Link para sair da conta -->
         <span class="logout">
           <a href="../index.html"> Sair da conta </a>
         </span>
       </div>
+
+      <!-- CONTEÚDO PRINCIPAL -->
       <main>
         <div class="ganhosEGastos">
+          
+          <!-- BLOCO DE GRÁFICO DE GASTOS -->
           <div class="bloco" id="blocoGastos">
-            <h2>Gastos</h2>
-            <canvas id="graficoGastos" width="600" height="350"></canvas>
+            <h2>Gráfico de Gastos</h2>
+
+            <!-- Canvas onde será desenhado o gráfico de gastos -->
+            <canvas id="graficoGastos" width="800" height="350"></canvas>
+
+            <!-- Botões para trocar o tipo de gráfico -->
             <div class="opcoes">
               <span class="botao ativo" data-tipo="pizza">Pizza</span>
               <span class="botao" data-tipo="barras">Barras</span>
               <span class="botao" data-tipo="linha">Linha</span>
             </div>
+
+            <!-- Inputs com valores por categoria (renderizados pelo JS) -->
             <div class="inputs">
               <div id="graficoGasto">
-                <!-- <label>Aluguel: <input type="number" value="200" /></label>
-                <label>Comida: <input type="number" value="200" /></label>
-                <label>Transporte: <input type="number" value="200" /></label>
-                <label>Lazer: <input type="number" value="200" /></label> -->
               </div>
             </div>
           </div>
 
+          <!-- BLOCO DE GRÁFICO DE GANHOS -->
           <div class="bloco" id="blocoGanhos">
-            <h2>Ganhos</h2>
-            <canvas id="graficoGanhos" width="500" height="350"></canvas>
+            <h2>Gráfico de Ganhos</h2>
+
+            <!-- Canvas onde será desenhado o gráfico de ganhos -->
+            <canvas id="graficoGanhos" width="800" height="350"></canvas>
+
+            <!-- Botões para trocar o tipo de gráfico -->
             <div class="opcoes">
               <span class="botao ativo" data-tipo="pizza">Pizza</span>
               <span class="botao" data-tipo="barras">Barras</span>
               <span class="botao" data-tipo="linha">Linha</span>
             </div>
-            <div class="inputs" id="graficoGasto">
-              <!-- <label>Salário: <input type="number" value="3000" /></label>
-              <label>Freelance: <input type="number" value="800" /></label>
-              <label>Investimentos: <input type="number" value="500" /></label> -->
+
+            <!-- Inputs com valores por categoria (renderizados pelo JS) -->
+            <div class="inputs" id="graficoGanho">
             </div>
           </div>
         </div>
       </main>
     </header>
+
+    <!-- Importa o arquivo JS que manipula os gráficos e dados -->
     <script type="module" src="../bd/graficoBd.js"></script>
+
+    <!-- Script inline para mostrar o nome do usuário -->
     <script>
       const usuario = localStorage.getItem("usuarioLogado");
       document.getElementById("nomeUserTela").textContent =
