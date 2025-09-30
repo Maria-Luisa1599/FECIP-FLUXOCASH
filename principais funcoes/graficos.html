@@ -69,7 +69,7 @@
       <main>
         <div class="ganhosEGastos">
           <div class="bloco" id="blocoGastos">
-            <h2>Gastos do Mês</h2>
+            <h2>Gastos</h2>
             <canvas id="graficoGastos" width="600" height="350"></canvas>
             <div class="opcoes">
               <span class="botao ativo" data-tipo="pizza">Pizza</span>
@@ -77,33 +77,29 @@
               <span class="botao" data-tipo="linha">Linha</span>
             </div>
             <div class="inputs">
-              <label>Aluguel: <input type="number" value="200" /></label>
-              <label>Comida: <input type="number" value="200" /></label>
-              <label>Transporte: <input type="number" value="200" /></label>
-              <label>Lazer: <input type="number" value="200" /></label>
+              <div id="graficoGasto">
+                <!-- <label>Aluguel: <input type="number" value="200" /></label>
+                <label>Comida: <input type="number" value="200" /></label>
+                <label>Transporte: <input type="number" value="200" /></label>
+                <label>Lazer: <input type="number" value="200" /></label> -->
+              </div>
             </div>
           </div>
 
           <div class="bloco" id="blocoGanhos">
-            <h2>Ganhos do Mês</h2>
+            <h2>Ganhos</h2>
             <canvas id="graficoGanhos" width="500" height="350"></canvas>
             <div class="opcoes">
               <span class="botao ativo" data-tipo="pizza">Pizza</span>
               <span class="botao" data-tipo="barras">Barras</span>
               <span class="botao" data-tipo="linha">Linha</span>
             </div>
-            <div class="inputs">
-              <label>Salário: <input type="number" value="3000" /></label>
+            <div class="inputs" id="graficoGasto">
+              <!-- <label>Salário: <input type="number" value="3000" /></label>
               <label>Freelance: <input type="number" value="800" /></label>
-              <label>Investimentos: <input type="number" value="500" /></label>
+              <label>Investimentos: <input type="number" value="500" /></label> -->
             </div>
           </div>
-        </div>
-
-        <div class="bloco blocoAnual">
-          <h2>Comparativo Anual (Ganhos x Gastos)</h2>
-            <canvas id="graficoAnual" width="900" height="400"></canvas>
-            <div class="inputs" id="inputsAnual"></div>
         </div>
       </main>
     </header>

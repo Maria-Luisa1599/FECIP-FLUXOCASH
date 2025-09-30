@@ -4,9 +4,12 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 // Cria o cliente Supabase com a URL do projeto e a chave pública
 const supabase = createClient(
   "https://chvaqdzgvfqtcfaccomy.supabase.co",
-  "SUA_CHAVE_AQUI"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNodmFxZHpndmZxdGNmYWNjb215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMDU3ODIsImV4cCI6MjA3MDc4MTc4Mn0.0Wosp2gv_RfE1qVj4uClMSX3WmWLvpkqfLhe6Yhbw2I"
 );
 
+window.onload = async function () {
+  somarValoresTransacaoeCat()
+}
 // Recupera o ID do usuário armazenado no localStorage
 const usuario_id = localStorage.getItem("usuario_id");
 
@@ -43,8 +46,117 @@ async function iniciarGraficos() {
   inicializarBloco("blocoGastos", categorias, cores);
 }
 
+async function somarValoresTransacaoeCat() {
+  const { data: transacoes, error } = await supabase
+    .from("transacoes")      // tabela 'transacoes'
+    .select("*")            // seleciona todas as colunas
+    .eq("id_usuario", usuario_id) // filtra apenas as categorias do usuário
+  // .groupBy();
+
+    console.log("TRnasacoes:", transacoes);
+
+  if (error) {
+    console.error("Erro ao carregar transacoes:", error);
+    return []; // retorna array vazio em caso de erro
+  }
+
+  const { data: categorias, error: errorCategorias } = await supabase
+    .from("categoria")
+    .select("*")
+    .eq("id_usuario", usuario_id);
+    
+    // console.log("Categoriaaaaas:", categorias);
+  if (errorCategorias) {
+    console.error("Erro ao carregar categorias:", errorCategorias);
+    return;
+  }
+
+  const gastos = categorias
+    .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === "gasto"))
+    .map(cat => cat.tipo);
+
+    
+const gastosPorCategoria = transacoes
+  .filter(tr => tr.tipo === "gasto") // só gastos
+  .reduce((acc, tr) => {
+    // acha a categoria correspondente
+    const categoria = categorias.find(cat => cat.id_categoria === tr.fk_categoria_id_categoria);
+
+    if (categoria) {
+      // se ainda não existe, inicializa
+      if (!acc[categoria.tipo]) {
+        acc[categoria.tipo] = 0;
+      }
+      // soma os valores
+      acc[categoria.tipo] += tr.valor;
+    }
+    return acc;
+  }, {});
+
+
+const ganhosPorCategoria = transacoes
+  .filter(tr => tr.tipo === "ganho") // só gastos
+  .reduce((acc, tr) => {
+    // acha a categoria correspondente
+    const categoria = categorias.find(cat => cat.id_categoria === tr.fk_categoria_id_categoria);
+
+    if (categoria) {
+      // se ainda não existe, inicializa
+      if (!acc[categoria.tipo]) {
+        acc[categoria.tipo] = 0;
+      }
+      // soma os valores
+      acc[categoria.tipo] += tr.valor;
+    }
+    return acc;
+  }, {});
+
+console.log(ganhosPorCategoria);
+
+
+}
+
+
+// async function ValoresCategoria() {
+//   // const usuario_id = localStorage.getItem("usuario_id");
+
+
+
+//   const { data: transacoes, error: errorTransacoes } = await supabase
+//     .from("transacoes")
+//     .select("tipo, fk_categoria_id_categoria")
+//     .eq("id_usuario", usuario_id);
+//   if (errorTransacoes) {
+//     console.error("Erro ao carregar transações:", errorTransacoes);
+//     return;
+//   }
+
+//   console.log("Transações:", transacoes);
+
+//   const nomesGastos = categorias
+//     .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === "gasto"))
+//     .map(cat => cat.tipo);
+
+//   const nomesGanhos = categorias
+//     .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === "ganho"))
+//     .map(cat => cat.tipo);
+
+//   console.log("Categorias Gasto:", nomesGastos);
+//   console.log("Categorias Ganho:", nomesGanhos);
+
+//   if (nomesGastos.length > 0) {
+//     inicializarBloco("blocoGastos", nomesGastos, ["#ff6384", "#36a2eb", "#ffcd56", "#4caf50"]);
+//   }
+
+//   if (nomesGanhos.length > 0) {
+//     inicializarBloco("blocoGanhos", nomesGanhos, ["#4caf50", "#36a2eb", "#ffcd56"]);
+//   }
+
+
+// }
+
 // Função que desenha a legenda do gráfico
-function desenharLegenda(ctx, categorias, cores, xOffset=0) {
+function desenharLegenda(ctx, categorias, cores, xOffset = 0) {
   const xCor = ctx.canvas.width - 150 + xOffset; // posição horizontal da legenda
   categorias.forEach((nome, i) => {
     ctx.fillStyle = cores[i]; // cor do quadrado
@@ -203,103 +315,149 @@ function inicializarBloco(blocoId, categorias, cores, maxValor = 1500) {
 }
 
 // Função que inicializa o gráfico anual com ganhos e gastos por mês
-function inicializarBlocoAnual() {
-  const canvas = document.getElementById("graficoAnual");
-  const ctx = canvas.getContext("2d");
-  const inputsDiv = document.getElementById("inputsAnual");
+// function inicializarBlocoAnual() {
+//   const canvas = document.getElementById("graficoAnual");
+//   const ctx = canvas.getContext("2d");
+//   const inputsDiv = document.getElementById("inputsAnual");
 
-  const meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-  const cores = ["green","red"];
+//   const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+//   const cores = ["green", "red"];
 
-  // Cria inputs de ganhos e gastos para cada mês
-  meses.forEach((mes) => {
-    inputsDiv.innerHTML += `
-      <label>${mes} Ganhos: <input type="number" value="1000"></label>
-      <label>${mes} Gastos: <input type="number" value="700"></label><br>
-    `;
-  });
-  const inputs = inputsDiv.querySelectorAll("input");
+//   // Cria inputs de ganhos e gastos para cada mês
+//   meses.forEach((mes) => {
+//     inputsDiv.innerHTML += `
+//       <label>${mes} Ganhos: <input type="number" value="1000"></label>
+//       <label>${mes} Gastos: <input type="number" value="700"></label><br>
+//     `;
+//   });
+//   const inputs = inputsDiv.querySelectorAll("input");
 
-  // Função que pega os dados dos inputs de ganhos e gastos
-  function getDados() {
-    let ganhos = [], gastos = [];
-    for (let i = 0; i < inputs.length; i += 2) {
-      ganhos.push(parseFloat(inputs[i].value) || 0);
-      gastos.push(parseFloat(inputs[i+1].value) || 0);
-    }
-    return { ganhos, gastos };
-  }
+//   // Função que pega os dados dos inputs de ganhos e gastos
+//   function getDados() {
+//     let ganhos = [], gastos = [];
+//     for (let i = 0; i < inputs.length; i += 2) {
+//       ganhos.push(parseFloat(inputs[i].value) || 0);
+//       gastos.push(parseFloat(inputs[i + 1].value) || 0);
+//     }
+//     return { ganhos, gastos };
+//   }
 
-  // Função que desenha a grade fixa
-  function desenharGridFixo() {
-    const linhas = 5;
-    const maxValor = 1500;
-    const margemTop = 50;
-    const margemBottom = 50;
-    const alturaGrafico = canvas.height - margemTop - margemBottom;
+//   // Função que desenha a grade fixa
+//   function desenharGridFixo() {
+//     const linhas = 5;
+//     const maxValor = 1500;
+//     const margemTop = 50;
+//     const margemBottom = 50;
+//     const alturaGrafico = canvas.height - margemTop - margemBottom;
 
-    ctx.strokeStyle = "#ddd";
-    ctx.fillStyle = "#000";
-    ctx.font = "14px Arial";
-    ctx.lineWidth = 1;
+//     ctx.strokeStyle = "#ddd";
+//     ctx.fillStyle = "#000";
+//     ctx.font = "14px Arial";
+//     ctx.lineWidth = 1;
 
-    for (let i = 0; i <= linhas; i++) {
-      let y = canvas.height - margemBottom - (i * alturaGrafico / linhas);
-      ctx.beginPath();
-      ctx.moveTo(40, y);
-      ctx.lineTo(canvas.width - 80, y);
-      ctx.stroke();
-      let valor = Math.round(maxValor / linhas * i);
-      ctx.fillText(valor, 5, y + 5);
-    }
-  }
+//     for (let i = 0; i <= linhas; i++) {
+//       let y = canvas.height - margemBottom - (i * alturaGrafico / linhas);
+//       ctx.beginPath();
+//       ctx.moveTo(40, y);
+//       ctx.lineTo(canvas.width - 80, y);
+//       ctx.stroke();
+//       let valor = Math.round(maxValor / linhas * i);
+//       ctx.fillText(valor, 5, y + 5);
+//     }
+//   }
 
-  // Função que desenha gráfico de barras anual
-  function desenharBarrasAnual() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    desenharGridFixo();
+//   // Função que desenha gráfico de barras anual
+//   function desenharBarrasAnual() {
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+//     desenharGridFixo();
 
-    const { ganhos, gastos } = getDados();
-    const larguraBarra = 20;
-    const espacamento = 60;
-    const baseY = canvas.height - 50;
-    const alturaMax = canvas.height - 100;
+//     const { ganhos, gastos } = getDados();
+//     const larguraBarra = 20;
+//     const espacamento = 60;
+//     const baseY = canvas.height - 50;
+//     const alturaMax = canvas.height - 100;
 
-    meses.forEach((mes, i) => {
-      let alturaG = (ganhos[i] / 1500) * alturaMax;
-      let alturaC = (gastos[i] / 1500) * alturaMax;
+//     meses.forEach((mes, i) => {
+//       let alturaG = (ganhos[i] / 1500) * alturaMax;
+//       let alturaC = (gastos[i] / 1500) * alturaMax;
 
-      // Desenha ganhos
-      ctx.fillStyle = "green";
-      ctx.fillRect(80 + i * espacamento, baseY - alturaG, larguraBarra, alturaG);
+//       // Desenha ganhos
+//       ctx.fillStyle = "green";
+//       ctx.fillRect(80 + i * espacamento, baseY - alturaG, larguraBarra, alturaG);
 
-      // Desenha gastos
-      ctx.fillStyle = "red";
-      ctx.fillRect(80 + i * espacamento + larguraBarra + 5, baseY - alturaC, larguraBarra, alturaC);
+//       // Desenha gastos
+//       ctx.fillStyle = "red";
+//       ctx.fillRect(80 + i * espacamento + larguraBarra + 5, baseY - alturaC, larguraBarra, alturaC);
 
-      ctx.fillStyle = "#000";
-      ctx.fillText(mes, 80 + i * espacamento, baseY + 15);
-    });
+//       ctx.fillStyle = "#000";
+//       ctx.fillText(mes, 80 + i * espacamento, baseY + 15);
+//     });
 
-    // Desenha legenda
-    ctx.fillStyle = "green";
-    ctx.fillRect(canvas.width - 120, 30, 15, 15);
-    ctx.fillStyle = "#000";
-    ctx.fillText("Ganhos", canvas.width - 100, 42);
+//     // Desenha legenda
+//     ctx.fillStyle = "green";
+//     ctx.fillRect(canvas.width - 120, 30, 15, 15);
+//     ctx.fillStyle = "#000";
+//     ctx.fillText("Ganhos", canvas.width - 100, 42);
 
-    ctx.fillStyle = "red";
-    ctx.fillRect(canvas.width - 120, 55, 15, 15);
-    ctx.fillStyle = "#000";
-    ctx.fillText("Gastos", canvas.width - 100, 67);
-  }
+//     ctx.fillStyle = "red";
+//     ctx.fillRect(canvas.width - 120, 55, 15, 15);
+//     ctx.fillStyle = "#000";
+//     ctx.fillText("Gastos", canvas.width - 100, 67);
+//   }
 
-  // Atualiza gráfico ao mudar qualquer input
-  inputs.forEach(input => input.addEventListener("input", desenharBarrasAnual));
-  desenharBarrasAnual(); // desenha gráfico inicial
-}
+//   // Atualiza gráfico ao mudar qualquer input
+//   inputs.forEach(input => input.addEventListener("input", desenharBarrasAnual));
+//   desenharBarrasAnual(); // desenha gráfico inicial
+// }
 
 // Inicializa os blocos com categorias fixas ou carregadas do banco
-inicializarBloco("blocoGastos", ["Aluguel","Comida","Transporte","Lazer"], ["#ff6384","#36a2eb","#ffcd56","#4caf50"]);
-inicializarBloco("blocoGanhos", ["Salário","Freelance","Investimentos"], ["#4caf50","#36a2eb","#ffcd56"]);
-inicializarBlocoAnual(); // inicializa gráfico anual
-// iniciarGraficos();       // carrega categorias do banco e inicializa gráfico de gastos
+async function carregarCategorias() {
+  const usuario_id = localStorage.getItem("usuario_id");
+
+  const { data: categorias, error: errorCategorias } = await supabase
+    .from("categoria")
+    .select("*")
+    .eq("id_usuario", usuario_id);
+
+  if (errorCategorias) {
+    console.error("Erro ao carregar categorias:", errorCategorias);
+    return;
+  }
+
+  console.log("Categorias:", categorias);
+
+  const { data: transacoes, error: errorTransacoes } = await supabase
+    .from("transacoes")
+    .select("tipo, fk_categoria_id_categoria")
+    .eq("id_usuario", usuario_id);
+  if (errorTransacoes) {
+    console.error("Erro ao carregar transações:", errorTransacoes);
+    return;
+  }
+
+  console.log("Transações:", transacoes);
+
+  const nomesGastos = categorias
+    .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === "gasto"))
+    .map(cat => cat.tipo);
+
+  const nomesGanhos = categorias
+    .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === "ganho"))
+    .map(cat => cat.tipo);
+
+  console.log("Categorias Gasto:", nomesGastos);
+  console.log("Categorias Ganho:", nomesGanhos);
+
+  if (nomesGastos.length > 0) {
+    inicializarBloco("blocoGastos", nomesGastos, ["#ff6384", "#36a2eb", "#ffcd56", "#4caf50"]);
+  }
+
+  if (nomesGanhos.length > 0) {
+    inicializarBloco("blocoGanhos", nomesGanhos, ["#4caf50", "#36a2eb", "#ffcd56"]);
+  }
+
+  // inicializarBlocoAnual();
+}
+
+
+document.addEventListener("DOMContentLoaded", carregarCategorias);

@@ -1,55 +1,84 @@
-
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #336c77;
-    color: white;
-  }
-  .ganhosEGastos{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 50px;
-  }
-  canvas {
-    margin: 20px 0;
-    border: 1px solid #ccc;
-    background: #fff;
-  }
-  .bloco {
-    margin-bottom: 70px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .opcoes {
-    margin: 15px 0;
-  }
-  .botao {
-    display: inline-block;
-    margin: 0 10px;
-    padding: 8px 15px;
-    border: 2px solid #2a5f6bff;
-    border-radius: 5px;
-    cursor: pointer;
-    user-select: none;
-    transition: 0.3s;
-  }
-  .botao:hover {
-    background: #ddd;
-  }
-  .ativo {
-    background: #2E616C;
-    color: #fff;
-  }
-  .inputs {
-    margin: 20px 0;
-  }
-  .inputs input {
-    width: 70px;
-    margin: 5px;
-    text-align: center;
-  }
-  .inputs label {
-    margin-right: 10px;
-  }
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #336c77;
+  color: white;
+}
+.ganhosEGastos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+}
+canvas {
+  margin: 20px 0;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+.bloco {
+  margin-bottom: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.opcoes {
+  margin: 15px 0;
+}
+.botao {
+  display: inline-block;
+  margin: 0 10px;
+  padding: 8px 15px;
+  border: 2px solid #2a5f6bff;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.3s;
+}
+.botao:hover {
+  background: #ddd;
+}
+.ativo {
+  background: #2e616c;
+  color: #fff;
+}
+.inputs {
+  margin: 20px 0;
+}
+.inputs input {
+  width: 70px;
+  margin: 5px;
+  text-align: center;
+}
+.inputs label {
+  margin-right: 10px;
+}
+canvas {
+  margin: 20px 25px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+.bloco {
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.opcoes {
+  margin: 15px 0;
+}
+.botao {
+  display: inline-block;
+  margin: 0 10px;
+  padding: 8px 15px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.botao:hover {
+  background: #ddd;
+}
+.ativo {
+  background: #333;
+  color: #fff;
+}
