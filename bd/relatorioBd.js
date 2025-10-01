@@ -1,18 +1,19 @@
 // Array que guarda os relatórios de cada mês
 // Cada relatório contém ganhos, gastos e investimentos com categorias e valores
+
 const relatorios = [ 
     {
-        mes: "Agosto 2025",
+        mes: "Relatorio Geral",
         ganhos: [{ categoria: "Salário", valor: 3000 }, { categoria: "Freelance", valor: 800 }],
         gastos: [{ categoria: "Aluguel", valor: 1200 }, { categoria: "Supermercado", valor: 600 }, { categoria: "Transporte", valor: 150 }, { categoria: "Lazer", valor: 200 }],
         investimentos: [{ categoria: "Tesouro Direto", valor: 300 }, { categoria: "Ações", valor: 200 }]
-    },
-    {
-        mes: "Julho 2025",
-        ganhos: [{ categoria: "Salário", valor: 3000 }, { categoria: "Freelance", valor: 500 }],
-        gastos: [{ categoria: "Aluguel", valor: 1200 }, { categoria: "Supermercado", valor: 700 }, { categoria: "Transporte", valor: 150 }, { categoria: "Lazer", valor: 250 }],
-        investimentos: [{ categoria: "Tesouro Direto", valor: 400 }, { categoria: "Ações", valor: 100 }]
     }
+    // {
+    //     mes: "Julho 2025",
+    //     ganhos: [{ categoria: "Salário", valor: 3000 }, { categoria: "Freelance", valor: 500 }],
+    //     gastos: [{ categoria: "Aluguel", valor: 1200 }, { categoria: "Supermercado", valor: 700 }, { categoria: "Transporte", valor: 150 }, { categoria: "Lazer", valor: 250 }],
+    //     investimentos: [{ categoria: "Tesouro Direto", valor: 400 }, { categoria: "Ações", valor: 100 }]
+    // }
 ];
 
 // Seleciona os elementos principais da página

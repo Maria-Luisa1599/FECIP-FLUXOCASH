@@ -8,7 +8,6 @@ body {
 
 /* Container geral para ganhos e gastos */
 .ganhosEGastos {
-  /* display: flex;  → Está comentado, mas serviria para alinhar blocos lado a lado */
   align-items: center;   /* Centralizaria itens verticalmente se o flex fosse ativado */
   justify-content: center; /* Centralizaria itens horizontalmente (com flex) */
   margin-top: 50px;     /* Espaço superior */

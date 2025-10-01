@@ -1,88 +1,103 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <title>FluxoCash - Relatorios</title>
+
+    <!-- Biblioteca para exportar HTML em PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Biblioteca Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Favicon -->
     <link rel="icon" href="../assets/imgs/favIcon.png" />
-    <link rel="stylesheet" href="../assets/css/home.css">
-    <link rel="stylesheet" href="./css/relatorio.css">
-        <link
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../assets/css/home.css"> <!-- Estilo geral -->
+    <link rel="stylesheet" href="./css/relatorio.css"> <!-- Estilo específico da página -->
+
+    <!-- Bootstrap icons -->
+    <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     />
   </head>
+
   <body>
-        <nav class="menu-lateral">
+    <!-- Menu lateral -->
+    <nav class="menu-lateral">
       <div class="btn-expandir">
         <i class="bi bi-list"></i>
         <span>INÍCIO</span>
       </div>
       <ul>
+        <!-- Links principais -->
         <li class="item-menu">
           <a href="../principais funcoes/fluxocash.html">
-            <span class="icon">
-              <i class="bi bi-cash-coin"></i>
-            </span>
+            <span class="icon"><i class="bi bi-cash-coin"></i></span>
             <span class="txt-link"> Transações </span>
           </a>
         </li>
         <li class="item-menu">
           <a href="../principais funcoes/graficos.html">
-            <span class="icon">
-              <i class="bi bi-pie-chart-fill"></i>
-            </span>
+            <span class="icon"><i class="bi bi-pie-chart-fill"></i></span>
             <span class="txt-link"> Gráficos </span>
           </a>
         </li>
         <li class="item-menu">
           <a href="../principais funcoes/relatorio.html">
-            <span class="icon">
-              <i class="bi bi-clipboard-data"></i>
-            </span>
+            <span class="icon"><i class="bi bi-clipboard-data"></i></span>
             <span class="txt-link"> Relatórios </span>
           </a>
         </li>
         <li class="item-menu">
           <a href="../principais funcoes/meuPorquinho.html">
-            <span class="icon">
-              <i class="bi bi-piggy-bank-fill"></i>
-            </span>
+            <span class="icon"><i class="bi bi-piggy-bank-fill"></i></span>
             <span class="txt-link">Meu porquinho</span>
           </a>
         </li>
       </ul>
     </nav>
+
+    <!-- Cabeçalho -->
     <header>
       <div class="dadosUser">
-        <span id="nomeUserTela"></span>
+        <span id="nomeUserTela"></span> <!-- Nome do usuário logado -->
         <div>
-          <img
-            src="../assets/imgs/mainImg/userImg.png"
-            alt="Imagem do Usuário"
-          />
+          <img src="../assets/imgs/mainImg/userImg.png" alt="Imagem do Usuário" />
         </div>
         <span class="logout">
-          <a href="../index.html"> Sair da conta </a>
+          <a href="../index.html"> Sair da conta </a> <!-- Botão de logout -->
         </span>
       </div>
-    <main>
-      <h1>Relatórios</h1>
-      <div class="container" id="containerCartoes"></div>
-  
-      <div id="modalOverlay">
-        <div id="modalContent">
-          <div id="modalRelatorio"></div>
-          <div class="modalButtons">
-            <button id="baixarModal" class="btnPdf">Baixar PDF</button>
-            <button id="fecharModal" class="btnPdf">Fechar</button>
+
+      <main>
+        <h1>Relatório</h1>
+
+        <!-- Container onde serão exibidos os cartões de relatório dinamicamente -->
+        <div class="container" id="containerCartoes"></div>
+
+        <!-- Modal para exibir relatório detalhado -->
+        <div id="modalOverlay">
+          <div id="modalContent">
+            <div id="modalRelatorio"></div> <!-- Conteúdo do relatório dentro do modal -->
+
+            <!-- Botões do modal -->
+            <div class="modalButtons">
+              <button id="baixarModal" class="btnPdf">Baixar PDF</button>
+              <button id="fecharModal" class="btnPdf">Fechar</button>
+            </div>
           </div>
         </div>
-      </div>
-    </main>
-    <script src="../bd/relatorioBd.js"></script>
-      <script>
+      </main>
+    </header>
+
+    <!-- Script para carregar os relatórios do banco -->
+    <script type="module" src="../bd/relatorioBd.js"></script>
+
+    <!-- Script para mostrar o nome do usuário logado -->
+    <script>
       const usuario = localStorage.getItem("usuarioLogado");
       document.getElementById("nomeUserTela").textContent =
         usuario ?? "Visitante";

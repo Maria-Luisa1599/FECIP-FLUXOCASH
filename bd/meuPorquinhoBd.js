@@ -1,15 +1,3 @@
-//código incompleto - ajustar
-
-
-// import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-// código comentado que faria a conexão com o Supabase usando a biblioteca oficial
-
-// const supabase = createClient(
-//   "https://chvaqdzgvfqtcfaccomy.supabase.co",
-//   "chave_de_api"
-// );
-// código comentado que inicializaria o cliente Supabase
-
 // Recupera do localStorage o ID do usuário logado (salvo no login)
 const usuario_id = localStorage.getItem("usuario_id");
 const usuario_meta = localStorage.getItem('usuario_meta');
@@ -294,11 +282,6 @@ async function depositar() {
     let saldoAtual = await pegarSaldo(); 
     let saldo = saldoAtual + valor; // aqui ocorre erro se for Promise
 
-    // console.log(meta)
-    // console.log(saldoAtual)
-    // console.log(saldo)
-    // console.log('agora vou inserir no banco')
-
     // insere no banco o depósito feito
     const { data, error } = await supabase
       .from("cofre")
@@ -342,11 +325,6 @@ async function retirar() {
     let saldoAtual = await pegarSaldo(); 
     let saldo = saldoAtual - valor; // aqui ocorre erro se for Promise
 
-    // console.log(meta)
-    // console.log(saldoAtual)
-    // console.log(saldo)
-    // console.log('agora vou inserir no banco')
-
     // insere no banco o depósito feito
     const { data, error } = await supabase
       .from("cofre")
@@ -359,9 +337,6 @@ async function retirar() {
     else {
       console.log("Retirada efetuada", data);
     }
-
-  // Calcula saldo e total guardado
-  // totalGuardado += valor;
 
   // Atualiza o total na tela
   document.getElementById("totalCofrinho").innerText =
