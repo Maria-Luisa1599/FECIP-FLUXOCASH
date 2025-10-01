@@ -143,35 +143,42 @@ async function calcular() {
   });
 
   // Botão para limpar os campos e resetar
-  document.getElementById("limparCampos").addEventListener("click", async function () {
+document.getElementById("limparCampos").addEventListener("click", async function () {
+    // Limpa os inputs da meta
     document.getElementById("meta").value = "";
     document.getElementById("prazo").value = "";
     document.getElementById("mensal").value = "";
     document.getElementById("resultado").innerHTML = "";
 
+    // Limpa o total guardado
+    totalGuardado = 0;
+    document.getElementById("totalCofrinho").innerText = "Total guardado: R$ 0,00";
+
+    // Remove itens do localStorage
     localStorage.removeItem("meta");
     localStorage.removeItem("prazo");
     localStorage.removeItem("mensal");
-    // localStorage.removeItem("meta");
+
+    // Esconde o cofrinho
     document.querySelector(".cofrinho").style.display = "none";
 
-    // remove o readonly dos inputs
-    document.getElementById("meta").removeAttribute("readonly", true);
-    document.getElementById("prazo").removeAttribute("readonly", false);
+    // Remove readonly dos inputs
+    document.getElementById("meta").removeAttribute("readonly");
+    document.getElementById("prazo").removeAttribute("readonly");
     document.getElementById("mensal").removeAttribute("readonly");
+
+    // Marca meta como inativa no banco
     const { data, error } = await supabase
       .from("meta")
-      .update({
-        ativo: false
-      })
-      .eq("id_usuario", usuario_id)
+      .update({ ativo: false })
+      .eq("id_usuario", usuario_id);
 
     if (error) {
       alert("Erro ao atualizar: " + error.message);
       return;
     }
+});
 
-  });
 }
 
 
@@ -229,9 +236,9 @@ async function pegarMeta() {
 
 // Função que insere a meta no banco de dados
 async function criarMeta(meta, prazo) {
-  const { data, error } = await supabase
-    .from("meta")
-    .insert([{ id_usuario: usuario_id, meta, prazo }]); // insere a meta vinculada ao usuário
+const { data, error } = await supabase
+  .from("meta")
+  .insert([{ id_usuario: usuario_id, meta, prazo, ativo: true }]);
 
   if (error) {
     console.error("Erro ao adicionar:", error);
