@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
+    <!-- Meta tags e título -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FluxoCash - Transações</title>
     <link rel="icon" href="../assets/imgs/favIcon.png" />
-    <link rel="stylesheet" href="../assets/css/home.css" />
-    <link rel="stylesheet" href="./css/transacoes.css" />
+
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="../assets/css/home.css" />  <!-- Estilo geral da página -->
+    <link rel="stylesheet" href="./css/transacoes.css" />   <!-- Estilo específico de transações -->
+
+    <!-- Bootstrap icons -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     />
   </head>
+
   <body>
+    <!-- Menu lateral / barra de navegação -->
     <nav class="menu-lateral">
       <div class="btn-expandir">
-        <i class="bi bi-list"></i>
+        <i class="bi bi-list"></i>   <!-- Ícone do menu -->
         <span>INÍCIO</span>
       </div>
       <ul>
+        <!-- Links principais da aplicação -->
         <li class="item-menu">
           <a href="../principais funcoes/fluxocash.html">
             <span class="icon">
@@ -53,9 +61,11 @@
         </li>
       </ul>
     </nav>
+
+    <!-- Cabeçalho / dados do usuário -->
     <header>
       <div class="dadosUser">
-        <span id="nomeUserTela"></span>
+        <span id="nomeUserTela"></span> <!-- Nome do usuário logado -->
         <div>
           <img
             src="../assets/imgs/mainImg/userImg.png"
@@ -63,18 +73,24 @@
           />
         </div>
         <span class="logout">
-          <a href="../index.html"> Sair da conta </a>
+          <a href="../index.html"> Sair da conta </a> <!-- Botão de logout -->
         </span>
       </div>
+
+      <!-- Conteúdo principal -->
       <main>
+        <!-- Cartão para adicionar transações -->
         <div id="cartaoTransacao" class="add_transacoes">
           <div class="conteudo_principal">
+            <!-- Labels das colunas -->
             <div class="section">
               <div>Valor</div>
               <div>Tipo</div>
               <div>Categoria</div>
               <div>Data</div>
             </div>
+
+            <!-- Campos de input / select -->
             <div class="section">
               <input type="number" required name="valor" />
               <select name="tipo" required>
@@ -88,6 +104,8 @@
               <input type="date" required name="data" />
             </div>
           </div>
+
+          <!-- Botões do cartão de transações -->
           <div class="transacoes_botoes">
             <div class="transacoes_botoes-categoria">
               <button id="btnCategoriaEntra">Criar categoria</button>
@@ -99,6 +117,7 @@
           </div>
         </div>
 
+        <!-- Cartão para adicionar categorias -->
         <div id="cartaoCategoria" class="add_categoria">
           <div class="conteudo_principal_categoria">
             <div class="section">
@@ -110,16 +129,10 @@
           </div>
           <div class="transacoes_botoesCat">
             <div class="transacoes_botoes_sent">
-              <button
-                id="btnCategoriaSai"
-                style="padding: 4px; font-size: 15px"
-              >
+              <button id="btnCategoriaSai" style="padding: 4px; font-size: 15px">
                 Voltar
               </button>
-              <button
-                id="btnExcluirCategoria"
-                style="padding: 4px; font-size: 15px"
-              >
+              <button id="btnExcluirCategoria" style="padding: 4px; font-size: 15px">
                 Excluir
               </button>
               <button style="padding: 4px; font-size: 15px">Adicionar</button>
@@ -127,6 +140,7 @@
           </div>
         </div>
 
+        <!-- Cartão para edição de transações existentes -->
         <div id="cartaoEditar" class="add_transacoes">
           <div class="conteudo_principal">
             <div class="section">
@@ -154,6 +168,7 @@
           </div>
         </div>
 
+        <!-- Tabela de transações -->
         <table class="listaTransacoes">
           <tr>
             <th>Valor</th>
@@ -169,6 +184,7 @@
           <tr></tr>
         </table>
 
+        <!-- Botões principais -->
         <div style="display: flex; gap: 32px">
           <button id="btnAdicionar">Adicionar transação</button>
           <div>
@@ -186,11 +202,14 @@
             ></div>
           </div>
         </div>
-        <!-- dentro main // transacoes e transacoes-->
+
+        <!-- Scripts -->
         <script src="../transacoes.js"></script>
         <script type="module" src="../bd/transacoesBd.js"></script>
       </main>
     </header>
+
+    <!-- Script para mostrar nome do usuário logado -->
     <script>
       const usuario = localStorage.getItem("usuarioLogado");
       document.getElementById("nomeUserTela").textContent =

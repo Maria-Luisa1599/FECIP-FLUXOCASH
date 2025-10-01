@@ -1,52 +1,80 @@
-// Importa a biblioteca Supabase do CDN
+// -----------------------------
+// 1. Importação da biblioteca Supabase
+// -----------------------------
+
+// Importa a biblioteca oficial do Supabase via CDN
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-// Cria o cliente Supabase com a URL do projeto e a chave pública
+// -----------------------------
+// 2. Criação do cliente Supabase
+// -----------------------------
+
+// Cria o cliente do Supabase usando a URL do projeto e a chave pública (anon key)
+// Essa chave permite acessar o banco de dados do frontend, mas apenas com permissões públicas
 const supabase = createClient(
   "https://chvaqdzgvfqtcfaccomy.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNodmFxZHpndmZxdGNmYWNjb215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMDU3ODIsImV4cCI6MjA3MDc4MTc4Mn0.0Wosp2gv_RfE1qVj4uClMSX3WmWLvpkqfLhe6Yhbw2I"
 );
 
+// -----------------------------
+// 3. Executa funções ao carregar a página
+// -----------------------------
+
+// Quando a janela for carregada, chama a função para somar valores por categoria
 window.onload = async function () {
-  somarValoresTransacaoeCat()
+  somarValoresTransacaoeCat();
 }
-// Recupera o ID do usuário armazenado no localStorage
+
+// -----------------------------
+// 4. Recupera o ID do usuário logado
+// -----------------------------
+
+// Pega o ID do usuário que está salvo no localStorage
 const usuario_id = localStorage.getItem("usuario_id");
 
-// Função que carrega as categorias do banco de dados para o usuário logado
+// -----------------------------
+// 5. Função para carregar categorias do banco
+// -----------------------------
 async function carregarCategoriasDoBanco() {
+  // Faz uma consulta na tabela 'categoria' filtrando pelo usuário
   const { data: categorias, error } = await supabase
-    .from("categoria")      // tabela 'categoria'
-    .select("*")            // seleciona todas as colunas
-    .eq("id_usuario", usuario_id); // filtra apenas as categorias do usuário
+    .from("categoria")
+    .select("*") // pega todas as colunas
+    .eq("id_usuario", usuario_id); // filtra categorias apenas do usuário logado
 
   if (error) {
     console.error("Erro ao carregar categorias:", error);
-    return []; // retorna array vazio em caso de erro
+    return []; // retorna array vazio caso haja erro
   }
 
-  // Retorna apenas os nomes/tipos das categorias
+  // Retorna apenas o nome/tipo das categorias
   return categorias.map(cat => cat.tipo);
 }
 
-// Função que inicia os gráficos com cores e categorias carregadas do banco
+// -----------------------------
+// 6. Inicializa gráficos com cores e categorias
+// -----------------------------
 async function iniciarGraficos() {
   const categorias = await carregarCategoriasDoBanco();
 
-  // Paleta de cores para os gráficos
+  // Paleta de cores padrão para os gráficos
   const paletaCores = [
     "#FF6384", "#36A2EB", "#FFCE56", "#4CAF50",
     "#9C27B0", "#FF9800", "#795548", "#009688"
   ];
 
-  // Associa cada categoria a uma cor, repetindo se necessário
+  // Associa uma cor para cada categoria (repete se tiver mais categorias que cores)
   const cores = categorias.map((_, i) => paletaCores[i % paletaCores.length]);
 
-  // Inicializa o bloco de gastos com categorias e cores
+  // Inicializa o bloco de gráfico de gastos
   inicializarBloco("blocoGastos", categorias, cores);
 }
 
+// -----------------------------
+// 7. Soma valores de transações por categoria
+// -----------------------------
 async function somarValoresTransacaoeCat(tipo) {
+  // Consulta todas as transações do usuário
   const { data: transacoes, error } = await supabase
     .from("transacoes")
     .select("*")
@@ -79,19 +107,21 @@ async function somarValoresTransacaoeCat(tipo) {
 function desenharLegenda(ctx, categorias, cores, xOffset = 0) {
   const xCor = ctx.canvas.width - 150 + xOffset; // posição horizontal da legenda
   categorias.forEach((nome, i) => {
-    ctx.fillStyle = cores[i]; // cor do quadrado
-    ctx.fillRect(xCor, 20 + i * 25, 15, 15); // desenha o quadrado da legenda
-    ctx.fillStyle = "#000000ff"; // cor do texto
+    ctx.fillStyle = cores[i]; // cor do quadrado da legenda
+    ctx.fillRect(xCor, 20 + i * 25, 15, 15);
+    ctx.fillStyle = "#000"; // cor do texto
     ctx.font = "14px Arial";
     ctx.textAlign = "left";
-    ctx.fillText(nome, xCor + 20, 32 + i * 25); // escreve o nome da categoria
+    ctx.fillText(nome, xCor + 20, 32 + i * 25);
   });
 }
 
-// Função que desenha gráfico de pizza
+// -----------------------------
+// 9. Desenha gráfico de pizza
+// -----------------------------
 function desenharPizza(ctx, dados, categorias, cores) {
-  let total = dados.reduce((a, b) => a + b, 0); // soma todos os valores
-  let anguloInicio = 0; // começa do ângulo zero
+  let total = dados.reduce((a, b) => a + b, 0); // soma total
+  let anguloInicio = 0; // inicia ângulo
 
   dados.forEach((valor, i) => {
 // aplica log para valores muito diferentes
@@ -99,12 +129,12 @@ let totalLog = dados.reduce((sum, v) => sum + Math.log10(v + 1), 0);
 let angulo = (Math.log10(valor + 1) / totalLog) * 2 * Math.PI;
 
     ctx.beginPath();
-    ctx.moveTo(250, 150); // centro da pizza
-    ctx.arc(250, 150, 100, anguloInicio, anguloInicio + angulo); // desenha a fatia
+    ctx.moveTo(250, 150); // centro
+    ctx.arc(250, 150, 100, anguloInicio, anguloInicio + angulo);
     ctx.fillStyle = cores[i];
     ctx.fill();
 
-    // Calcula posição do texto percentual
+    // escreve porcentagem
     let meio = anguloInicio + angulo / 2;
     let x = 250 + Math.cos(meio) * 60;
     let y = 150 + Math.sin(meio) * 60;
@@ -112,21 +142,23 @@ let angulo = (Math.log10(valor + 1) / totalLog) * 2 * Math.PI;
     ctx.fillStyle = "#000";
     ctx.font = "bold 12px Arial";
     ctx.textAlign = "center";
-    ctx.fillText(porcent, x, y); // escreve a porcentagem na fatia
+    ctx.fillText(porcent, x, y);
 
-    anguloInicio += angulo; // atualiza ângulo inicial para a próxima fatia
+    anguloInicio += angulo; // atualiza ângulo
   });
 
-  desenharLegenda(ctx, categorias, cores); // desenha legenda do gráfico
+  desenharLegenda(ctx, categorias, cores); // adiciona legenda
 }
 
-// Função que desenha a grade de fundo (linhas horizontais) para gráficos de barras e linha
+// -----------------------------
+// 10. Desenha grade de fundo para gráficos de barras e linha
+// -----------------------------
 function desenharGrid(ctx, width, height, maxValor) {
-  ctx.strokeStyle = "#ddd"; // cor da grade
-  ctx.fillStyle = "#000"; // cor do texto
+  ctx.strokeStyle = "#ddd";
+  ctx.fillStyle = "#000";
   ctx.font = "14px Arial";
   ctx.lineWidth = 1;
-  let linhas = 5; // número de linhas
+  let linhas = 5;
   let margemTop = 50;
   let margemBottom = 50;
 
@@ -137,33 +169,37 @@ function desenharGrid(ctx, width, height, maxValor) {
     ctx.lineTo(width - 180, y);
     ctx.stroke();
     let valor = Math.round((maxValor / linhas) * i);
-    ctx.fillText(valor, 5, y + 5); // escreve os valores na lateral
+    ctx.fillText(valor, 5, y + 5);
   }
 }
 
-// Função que desenha gráfico de barras
+// -----------------------------
+// 11. Desenha gráfico de barras
+// -----------------------------
 function desenharBarras(ctx, dados, categorias, cores, maxValor) {
   let larguraBarra = 60;
   let espacamento = 100;
-  let baseY = 300; // linha base do gráfico
+  let baseY = 300;
 
   dados.forEach((valor, i) => {
-    let altura = (valor / maxValor) * 250; // altura proporcional
+    let altura = (valor / maxValor) * 250;
     ctx.fillStyle = cores[i];
     ctx.fillRect(i * espacamento + 80, baseY - altura, larguraBarra, altura);
 
     ctx.fillStyle = "#000";
     ctx.font = "12px Arial";
-    ctx.fillText(categorias[i], i * espacamento + 80, baseY + 15); // escreve a categoria abaixo da barra
+    ctx.fillText(categorias[i], i * espacamento + 80, baseY + 15);
   });
 
-  desenharLegenda(ctx, categorias, cores); // legenda
+  desenharLegenda(ctx, categorias, cores);
 }
 
-// Função que desenha gráfico de linha
+// -----------------------------
+// 12. Desenha gráfico de linha
+// -----------------------------
 function desenharLinha(ctx, dados, categorias, cores, maxValor) {
   ctx.beginPath();
-  ctx.moveTo(80, 300 - (dados[0] / maxValor) * 250); // ponto inicial
+  ctx.moveTo(80, 300 - (dados[0] / maxValor) * 250);
   ctx.strokeStyle = "#36a2eb";
   ctx.lineWidth = 2;
 
@@ -172,7 +208,7 @@ function desenharLinha(ctx, dados, categorias, cores, maxValor) {
   });
   ctx.stroke();
 
-  // desenha círculos nos pontos e escreve categorias
+  // Desenha pontos
   dados.forEach((valor, i) => {
     ctx.beginPath();
     ctx.arc(80 + i * 100, 300 - (valor / maxValor) * 250, 5, 0, 2 * Math.PI);
@@ -184,20 +220,21 @@ function desenharLinha(ctx, dados, categorias, cores, maxValor) {
     ctx.fillText(categorias[i], 80 + i * 100 - 20, 320);
   });
 
-  desenharLegenda(ctx, categorias, cores); // legenda
+  desenharLegenda(ctx, categorias, cores);
 }
 
-// Função que inicializa um bloco de gráfico (pizza, barras ou linha)
+// -----------------------------
+// 13. Inicializa bloco de gráfico (pizza, barras, linha)
+// -----------------------------
 function inicializarBloco(blocoId, categorias, cores, maxValor = 1500) {
   const bloco = document.getElementById(blocoId);
   const canvas = bloco.querySelector("canvas");
   const ctx = canvas.getContext("2d");
-  const botoes = bloco.querySelectorAll(".botao"); // botões de trocar gráfico
-  const inputs = bloco.querySelectorAll(".inputs input"); // inputs de valores
+  const botoes = bloco.querySelectorAll(".botao");
+  const inputs = bloco.querySelectorAll(".inputs input");
 
-  let tipoAtual = "pizza"; // tipo inicial do gráfico
+  let tipoAtual = "pizza"; // tipo inicial
 
-  // descobre se é gasto ou ganho
   const tipoTransacao = blocoId.includes("Gastos") ? "gasto" : "ganho";
 
   // Função que desenha o gráfico conforme o tipo selecionado
@@ -217,24 +254,22 @@ async function desenharGrafico(tipo) {
     tipoAtual = tipo;
 }
 
-  // Adiciona eventos aos botões para trocar tipo de gráfico
+  // Eventos para troca de gráfico
   botoes.forEach(botao => {
     botao.addEventListener("click", () => {
       botoes.forEach(b => b.classList.remove("ativo"));
       botao.classList.add("ativo");
-      let novoTipo = botao.getAttribute("data-tipo");
-      desenharGrafico(novoTipo);
+      desenharGrafico(botao.getAttribute("data-tipo"));
     });
   });
 
-  // Atualiza o gráfico ao mudar qualquer input
+  // Atualiza gráfico quando input muda
   inputs.forEach(input => {
     input.addEventListener("input", () => {
       desenharGrafico(tipoAtual);
     });
   });
 
-  // desenha gráfico inicial
   desenharGrafico(tipoAtual);
 }
 
@@ -252,19 +287,17 @@ async function carregarCategorias() {
     return;
   }
 
-  console.log("Categorias:", categorias);
-
   const { data: transacoes, error: errorTransacoes } = await supabase
     .from("transacoes")
     .select("tipo, fk_categoria_id_categoria")
     .eq("id_usuario", usuario_id);
+
   if (errorTransacoes) {
     console.error("Erro ao carregar transações:", errorTransacoes);
     return;
   }
 
-  console.log("Transações:", transacoes);
-
+  // Cria listas de categorias com transações de gasto e ganho
   const nomesGastos = categorias
     .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === "gasto"))
     .map(cat => cat.tipo);
@@ -273,20 +306,17 @@ async function carregarCategorias() {
     .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === "ganho"))
     .map(cat => cat.tipo);
 
-  console.log("Categorias Gasto:", nomesGastos);
-  console.log("Categorias Ganho:", nomesGanhos);
-
+  // Inicializa blocos de gráfico
   if (nomesGastos.length > 0) {
     inicializarBloco("blocoGastos", nomesGastos, ["#ff6384", "#36a2eb", "#ffcd56", "#4caf50", "#9C27B0", "#FF9800", "#795548", "#009688"]);
-  } "#FF6384", "#36A2EB", "#FFCE56", "#4CAF50",
-    "#9C27B0", "#FF9800", "#795548", "#009688"
+  }
 
   if (nomesGanhos.length > 0) {
     inicializarBloco("blocoGanhos", nomesGanhos, ["#4caf50", "#36a2eb", "#ffcd56", "#9C27B0", "#FF9800", "#795548", "#009688"]);
   }
-
-  // inicializarBlocoAnual();
 }
 
-
+// -----------------------------
+// 15. Dispara carregamento quando DOM estiver pronto
+// -----------------------------
 document.addEventListener("DOMContentLoaded", carregarCategorias);

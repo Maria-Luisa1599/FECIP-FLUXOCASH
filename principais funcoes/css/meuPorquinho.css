@@ -1,135 +1,152 @@
+/* Define o estilo do body da página */
 body {
-  overflow: hidden;
-  background-color: #336c77;
+  overflow: hidden; /* Remove barras de rolagem da página */
+  background-color: #336c77; /* Define um fundo azul esverdeado */
 }
 
+/* Define o estilo do elemento principal <main> */
 main {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  color: white;
+  display: flex; /* Usa flexbox para organizar os elementos filhos */
+  flex-direction: row; /* Organiza em linha horizontal */
+  align-items: center; /* Alinha verticalmente os itens ao centro */
+  justify-content: center; /* Centraliza horizontalmente os itens */
+  gap: 20px; /* Espaço entre os elementos filhos */
+  color: white; /* Cor do texto dentro do main */
 }
 
+/* Estilo do título <h1> */
 h1 {
-  margin-bottom: 20px;
+  margin-bottom: 20px; /* Espaço abaixo do título */
 }
 
+/* Estilo das caixas de conteúdo com fundo e sombra */
 .caixa {
-  background: #1a4a53ff;
-  padding: 20px;
-  border-radius: 15px;
-  font-size: 15px;
-  min-width: 400px;
-  text-align: center;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  background: #1a4a53ff; /* Cor de fundo azul escuro */
+  padding: 20px; /* Espaçamento interno */
+  border-radius: 15px; /* Bordas arredondadas */
+  font-size: 15px; /* Tamanho do texto */
+  min-width: 400px; /* Largura mínima */
+  text-align: center; /* Centraliza o texto */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Sombra sutil */
 }
 
+/* Estilo dos inputs de texto */
 input {
-  margin: 5px;
-  padding: 8px;
-  width: 60%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  margin: 5px; /* Margem ao redor do input */
+  padding: 8px; /* Espaço interno */
+  width: 60%; /* Largura relativa */
+  border: 1px solid #ccc; /* Borda cinza clara */
+  border-radius: 5px; /* Bordas arredondadas */
 }
 
+/* Estilo dos botões */
 button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 17px;
-  border: none;
-  width: 30%;
-  border-radius: 8px;
-  background-color: #173b42ff;
-  color: white;
-  cursor: pointer;
-  /* height: 30px; */
-  transition: 0.2s;
+  margin-top: 10px; /* Espaço acima do botão */
+  padding: 10px 20px; /* Espaçamento interno vertical e horizontal */
+  font-size: 17px; /* Tamanho da fonte */
+  border: none; /* Remove borda padrão */
+  width: 30%; /* Largura do botão */
+  border-radius: 8px; /* Bordas arredondadas */
+  background-color: #173b42ff; /* Cor de fundo azul escuro */
+  color: white; /* Cor do texto */
+  cursor: pointer; /* Cursor muda para indicar clicável */
+  transition: 0.2s; /* Transição suave ao alterar propriedades */
 }
 
+/* Efeito ao passar o mouse sobre o botão */
 button:hover {
-  background-color: #285862;
+  background-color: #285862; /* Cor de fundo muda */
 }
 
+/* Estilo da área de resultado */
 #resultado {
-  margin-top: 20px;
-  font-size: 1.1em;
+  margin-top: 20px; /* Espaço acima */
+  font-size: 1.1em; /* Tamanho um pouco maior que o normal */
 }
 
+/* Container do cofrinho com alinhamento central */
 .cofrinho {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 460px;
-  min-height: 345px;
-  font-size: 1.2em;
+  flex-direction: column; /* Coloca itens em coluna */
+  justify-content: center; /* Centraliza verticalmente */
+  align-items: center; /* Centraliza horizontalmente */
+  width: 460px; /* Largura fixa */
+  min-height: 345px; /* Altura mínima */
+  font-size: 1.2em; /* Tamanho da fonte */
 }
+
+/* Total do cofrinho */
 #totalCofrinho {
-  font-size: 1em;
-  margin: 10px 0;
-  padding: 12px;
-
-  border-radius: 15px;
-  background: #285862;
-  display: inline-block;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  font-size: 1em; /* Tamanho da fonte */
+  margin: 10px 0; /* Margem vertical */
+  padding: 12px; /* Espaçamento interno */
+  border-radius: 15px; /* Bordas arredondadas */
+  background: #285862; /* Fundo azul esverdeado */
+  display: inline-block; /* Faz com que o elemento se comporte como bloco inline */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Sombra sutil */
 }
+
+/* Input de valor de depósito */
 .valorDeposito {
-  width: 60%;
+  width: 60%; /* Largura relativa */
 }
+
+/* Container do input de saldo */
 .inputSaldo {
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* align-items: center; */
-  /* justify-content: center; */
-  width: 90%;
+  width: 90%; /* Largura quase total do container */
 }
+
+/* Botão dentro do inputSaldo */
 .inputSaldo button {
-  margin-top: 0px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 35px;
-  width: 100px;
+  margin-top: 0px; /* Remove margem superior */
+  display: flex; /* Usa flexbox para centralizar */
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  height: 35px; /* Altura fixa */
+  width: 100px; /* Largura fixa */
 }
+
+/* Container de cada linha de input dentro do saldo */
 .inputSaldoBox {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+  width: 100%; /* Ocupa toda largura do container */
+  display: flex; /* Flexbox para alinhar elementos */
+  align-items: center; /* Alinha verticalmente */
+  margin-bottom: 10px; /* Espaço inferior */
 }
+
+/* Overlay de alerta */
 .alert-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.3);
-  color: white;
-  z-index: 2000;
+  position: fixed; /* Fica fixo na tela */
+  top: 0; /* No topo */
+  left: 0; /* Na esquerda */
+  width: 100%; /* Largura total da tela */
+  height: 100%; /* Altura total da tela */
+  display: flex; /* Flexbox para centralizar */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  background-color: rgba(0, 0, 0, 0.3); /* Fundo semitransparente */
+  color: white; /* Cor do texto */
+  z-index: 2000; /* Fica acima de todos os elementos */
 }
 
+/* Card de alerta */
 .alert-card {
-  background-color: #23535d;
-  color: white;
-  padding: 20px 30px;
-  border-radius: 10px;
-  text-align: center;
-  min-width: 250px;
-  font-size: 16px;
+  background-color: #23535d; /* Fundo azul escuro */
+  color: white; /* Cor do texto */
+  padding: 20px 30px; /* Espaçamento interno */
+  border-radius: 10px; /* Bordas arredondadas */
+  text-align: center; /* Centraliza o texto */
+  min-width: 250px; /* Largura mínima */
+  font-size: 16px; /* Tamanho da fonte */
 }
 
+/* Botão dentro do alerta */
 .alert-card button {
-  margin-top: 15px;
-  padding: 5px 15px;
-  background-color: #2e616c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  margin-top: 15px; /* Espaço acima do botão */
+  padding: 5px 15px; /* Espaçamento interno */
+  background-color: #2e616c; /* Fundo azul */
+  color: white; /* Cor do texto */
+  border: none; /* Remove borda */
+  border-radius: 5px; /* Bordas arredondadas */
+  cursor: pointer; /* Cursor de clique */
 }

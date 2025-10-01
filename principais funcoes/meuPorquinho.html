@@ -1,85 +1,88 @@
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
+    <!-- Meta tags -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FluxoCash</title>
+    
+    <title>FluxoCash - Meu Porquinho</title>
     <link rel="icon" href="../assets/imgs/favIcon.png" />
-    <link rel="stylesheet" href="../assets/css/home.css" />
-    <link rel="stylesheet" href="../principais funcoes/css/meuPorquinho.css" />
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../assets/css/home.css" /> <!-- Estilo geral -->
+    <link rel="stylesheet" href="../principais funcoes/css/meuPorquinho.css" /> <!-- Estilo específico -->
+
+    <!-- Bootstrap icons -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     />
   </head>
+
   <body>
-    <!-- inseri aqui igual está na cadastro.html -->
+    <!-- Biblioteca Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
+      // Inicializa Supabase para conexão com o banco
       const supabaseUrl = "https://chvaqdzgvfqtcfaccomy.supabase.co";
-      const supabaseKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNodmFxZHpndmZxdGNmYWNjb215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMDU3ODIsImV4cCI6MjA3MDc4MTc4Mn0.0Wosp2gv_RfE1qVj4uClMSX3WmWLvpkqfLhe6Yhbw2I";
+      const supabaseKey = "..."; // Chave pública
       window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
     </script>
 
+    <!-- Menu lateral -->
     <nav class="menu-lateral">
       <div class="btn-expandir">
         <i class="bi bi-list"></i>
         <span>INÍCIO</span>
       </div>
       <ul>
+        <!-- Links principais -->
         <li class="item-menu">
           <a href="../principais funcoes/fluxocash.html">
-            <span class="icon">
-              <i class="bi bi-cash-coin"></i>
-            </span>
+            <span class="icon"><i class="bi bi-cash-coin"></i></span>
             <span class="txt-link"> Transações </span>
           </a>
         </li>
         <li class="item-menu">
           <a href="../principais funcoes/graficos.html">
-            <span class="icon">
-              <i class="bi bi-pie-chart-fill"></i>
-            </span>
+            <span class="icon"><i class="bi bi-pie-chart-fill"></i></span>
             <span class="txt-link"> Gráficos </span>
           </a>
         </li>
         <li class="item-menu">
           <a href="../principais funcoes/relatorio.html">
-            <span class="icon">
-              <i class="bi bi-clipboard-data"></i>
-            </span>
+            <span class="icon"><i class="bi bi-clipboard-data"></i></span>
             <span class="txt-link"> Relatórios </span>
           </a>
         </li>
         <li class="item-menu">
           <a href="../principais funcoes/meuPorquinho.html">
-            <span class="icon">
-              <i class="bi bi-piggy-bank-fill"></i>
-            </span>
+            <span class="icon"><i class="bi bi-piggy-bank-fill"></i></span>
             <span class="txt-link">Meu porquinho</span>
           </a>
         </li>
       </ul>
     </nav>
+
+    <!-- Cabeçalho -->
     <header>
       <div class="dadosUser">
-        <span id="nomeUserTela"></span>
+        <span id="nomeUserTela"></span> <!-- Nome do usuário logado -->
         <div>
-          <img
-            src="../assets/imgs/mainImg/userImg.png"
-            alt="Imagem do Usuário"
-          />
+          <img src="../assets/imgs/mainImg/userImg.png" alt="Imagem do Usuário" />
         </div>
         <span class="logout">
-          <a href="../index.html"> Sair da conta </a>
+          <a href="../index.html"> Sair da conta </a> <!-- Botão logout -->
         </span>
       </div>
+
+      <!-- Conteúdo principal -->
       <main>
-        <!-- Configuração da meta -->
+        <!-- Caixa de configuração de meta -->
         <div class="caixa meta">
           <h1>Meu Porquinho</h1>
+          
           <label>Meta (R$):</label><br />
           <input type="number" id="meta" placeholder="Ex: 5000" /><br />
 
@@ -89,9 +92,9 @@
           <label>Depósito mensal planejado (R$):</label><br />
           <input type="number" id="mensal" placeholder="Ex: 300" /><br />
 
-          <button onclick="calcular()">Calcular</button>
+          <button onclick="calcular()">Calcular</button> <!-- Calcula valores e prazo -->
 
-          <div id="resultado"></div>
+          <div id="resultado"></div> <!-- Aqui aparece o resultado do cálculo -->
         </div>
 
         <!-- Cofrinho fictício -->
@@ -100,27 +103,26 @@
           <div id="totalCofrinho">Total guardado: R$ 0,00</div>
           <br />
 
+          <!-- Depósito -->
           <div style="width: 100%">
-            <input
-              type="number"
-              id="valorDeposito"
-              placeholder="Valor a depositar (R$)"
-            />
+            <input type="number" id="valorDeposito" placeholder="Valor a depositar (R$)" />
             <button onclick="depositar()">Depositar</button>
           </div>
+
+          <!-- Retirada -->
           <div style="width: 100%">
-            <input
-              type="number"
-              id="valorRetirada"
-              placeholder="Valor a retirar (R$)"
-            />
+            <input type="number" id="valorRetirada" placeholder="Valor a retirar (R$)" />
             <button onclick="retirar()">Retirar</button>
           </div>
         </div>
       </main>
     </header>
+
+    <!-- Scripts do meu porquinho -->
     <script src="../bd/meuPorquinhoBd.js"></script>
     <script type="module" src="../bd/meuPorquinhoBd.js"></script>
+
+    <!-- Script para mostrar nome do usuário logado -->
     <script>
       const usuario = localStorage.getItem("usuarioLogado");
       document.getElementById("nomeUserTela").textContent =
