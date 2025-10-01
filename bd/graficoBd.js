@@ -48,100 +48,32 @@ async function iniciarGraficos() {
 
 async function somarValoresTransacaoeCat(tipo) {
   const { data: transacoes, error } = await supabase
-    .from("transacoes")      // tabela 'transacoes'
-    .select("*")            // seleciona todas as colunas
-    .eq("id_usuario", usuario_id) // filtra apenas as categorias do usuário
-  // .groupBy();
-
-  if (error) {
-    console.error("Erro ao carregar transacoes:", error);
-    return []; // retorna array vazio em caso de erro
-  }
+    .from("transacoes")
+    .select("*")
+    .eq("id_usuario", usuario_id);
 
   const { data: categorias, error: errorCategorias } = await supabase
     .from("categoria")
     .select("*")
     .eq("id_usuario", usuario_id);
 
-  // console.log("Categoriaaaaas:", categorias);
-  if (errorCategorias) {
-    console.error("Erro ao carregar categorias:", errorCategorias);
-    return;
-  }
-
-  const gastos = categorias
-    .filter(cat => transacoes.some(tr => tr.fk_categoria_id_categoria === cat.id_categoria && tr.tipo === tipo))
-    .map(cat => cat.tipo);
-
-  // separar em funções
-
   const valoresPorCategoria = transacoes
-    .filter(tr => tr.tipo === tipo) // só gastos
+    .filter(tr => tr.tipo === tipo)
     .reduce((acc, tr) => {
-      // acha a categoria correspondente
       const categoria = categorias.find(cat => cat.id_categoria === tr.fk_categoria_id_categoria);
+      if (!categoria) return acc;
 
-      if (categoria) {
-        // se ainda não existe, inicializa
-        if (!acc[categoria.tipo]) {
-          acc[categoria.tipo] = 0;
-        }
-        // soma os valores
-        acc[categoria.tipo] += tr.valor;
-      }
+      if (!acc[categoria.tipo]) acc[categoria.tipo] = 0;
+      acc[categoria.tipo] += tr.valor;
       return acc;
     }, {});
 
+  const labels = Object.keys(valoresPorCategoria);
+  const dados = Object.values(valoresPorCategoria);
 
-  // const ganhosPorCategoria = transacoes
-  //   .filter(tr => tr.tipo === tipo) // só gastos
-  //   .reduce((acc, tr) => {
-  //     // acha a categoria correspondente
-  //     const categoria = categorias.find(cat => cat.id_categoria === tr.fk_categoria_id_categoria);
-
-  //     if (categoria) {
-  //       // se ainda não existe, inicializa
-  //       if (!acc[categoria.tipo]) {
-  //         acc[categoria.tipo] = 0;
-  //       }
-  //       // soma os valores
-  //       acc[categoria.tipo] += tr.valor;
-
-  //     }
-
-  //     return acc;
-
-  //   }, {});
-
-  let dados = [];
-
-  if (tipo === "ganho") {
-    Object.entries(valoresPorCategoria).forEach(([categoria, soma]) => {
-      console.log(`Categoria: ${categoria} | Soma: ${soma}`);
-      dados.push(soma)
-      const graficoGanho = document.querySelector("#graficoGanho");
-
-      graficoGanho.innerHTML += `
-        <label><strong>${categoria}:</strong> ${soma.toFixed(2)}</label>`;
-      // <label> <strong>${categoria}:</strong>  ${soma.toFixed(2)}</label>`;
-      // return Array.from(inputs).map(input => parseFloat(input.value) || 0);
-
-    });
-  }
-  else {
-    Object.entries(valoresPorCategoria).forEach(([categoria, soma]) => {
-      console.log(`Categoria: ${categoria} | Soma: ${soma}`);
-      dados.push(soma)
-      const graficoGasto = document.querySelector("#graficoGasto");
-
-      graficoGasto.innerHTML += `
-        <label><strong>${categoria}:</strong> ${soma.toFixed(2)}</label>`;
-
-    });
-  }
-
-  return dados;
+  return { labels, dados }; // retorna ambos
 }
+
 
 // Função que desenha a legenda do gráfico
 function desenharLegenda(ctx, categorias, cores, xOffset = 0) {
@@ -162,7 +94,10 @@ function desenharPizza(ctx, dados, categorias, cores) {
   let anguloInicio = 0; // começa do ângulo zero
 
   dados.forEach((valor, i) => {
-    let angulo = (valor / total) * 2 * Math.PI; // calcula ângulo da fatia
+// aplica log para valores muito diferentes
+let totalLog = dados.reduce((sum, v) => sum + Math.log10(v + 1), 0);
+let angulo = (Math.log10(valor + 1) / totalLog) * 2 * Math.PI;
+
     ctx.beginPath();
     ctx.moveTo(250, 150); // centro da pizza
     ctx.arc(250, 150, 100, anguloInicio, anguloInicio + angulo); // desenha a fatia
@@ -266,21 +201,21 @@ function inicializarBloco(blocoId, categorias, cores, maxValor = 1500) {
   const tipoTransacao = blocoId.includes("Gastos") ? "gasto" : "ganho";
 
   // Função que desenha o gráfico conforme o tipo selecionado
-  async function desenharGrafico(tipo) {
-    let dados = await somarValoresTransacaoeCat(tipoTransacao); // passa "gasto" ou "ganho"
-    console.log("dados carregados:", dados);
+async function desenharGrafico(tipo) {
+    const { labels, dados } = await somarValoresTransacaoeCat(tipoTransacao);
+    console.log("dados carregados:", dados, "labels:", labels);
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // limpa o canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (tipo === "pizza") {
-      desenharPizza(ctx, dados, categorias, cores);
+      desenharPizza(ctx, dados, labels, cores);
     } else {
       desenharGrid(ctx, canvas.width, canvas.height, maxValor);
-      if (tipo === "barras") desenharBarras(ctx, dados, categorias, cores, maxValor);
-      if (tipo === "linha") desenharLinha(ctx, dados, categorias, cores, maxValor);
+      if (tipo === "barras") desenharBarras(ctx, dados, labels, cores, maxValor);
+      if (tipo === "linha") desenharLinha(ctx, dados, labels, cores, maxValor);
     }
-    tipoAtual = tipo; // atualiza o tipo atual
-  }
+    tipoAtual = tipo;
+}
 
   // Adiciona eventos aos botões para trocar tipo de gráfico
   botoes.forEach(botao => {
@@ -302,103 +237,6 @@ function inicializarBloco(blocoId, categorias, cores, maxValor = 1500) {
   // desenha gráfico inicial
   desenharGrafico(tipoAtual);
 }
-
-
-// Função que inicializa o gráfico anual com ganhos e gastos por mês
-// function inicializarBlocoAnual() {
-//   const canvas = document.getElementById("graficoAnual");
-//   const ctx = canvas.getContext("2d");
-//   const inputsDiv = document.getElementById("inputsAnual");
-
-//   const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-//   const cores = ["green", "red"];
-
-//   // Cria inputs de ganhos e gastos para cada mês
-//   meses.forEach((mes) => {
-//     inputsDiv.innerHTML += `
-//       <label>${mes} Ganhos: <input type="number" value="1000"></label>
-//       <label>${mes} Gastos: <input type="number" value="700"></label><br>
-//     `;
-//   });
-//   const inputs = inputsDiv.querySelectorAll("input");
-
-//   // Função que pega os dados dos inputs de ganhos e gastos
-//   function getDados() {
-//     let ganhos = [], gastos = [];
-//     for (let i = 0; i < inputs.length; i += 2) {
-//       ganhos.push(parseFloat(inputs[i].value) || 0);
-//       gastos.push(parseFloat(inputs[i + 1].value) || 0);
-//     }
-//     return { ganhos, gastos };
-//   }
-
-//   // Função que desenha a grade fixa
-//   function desenharGridFixo() {
-//     const linhas = 5;
-//     const maxValor = 1500;
-//     const margemTop = 50;
-//     const margemBottom = 50;
-//     const alturaGrafico = canvas.height - margemTop - margemBottom;
-
-//     ctx.strokeStyle = "#ddd";
-//     ctx.fillStyle = "#000";
-//     ctx.font = "14px Arial";
-//     ctx.lineWidth = 1;
-
-//     for (let i = 0; i <= linhas; i++) {
-//       let y = canvas.height - margemBottom - (i * alturaGrafico / linhas);
-//       ctx.beginPath();
-//       ctx.moveTo(40, y);
-//       ctx.lineTo(canvas.width - 80, y);
-//       ctx.stroke();
-//       let valor = Math.round(maxValor / linhas * i);
-//       ctx.fillText(valor, 5, y + 5);
-//     }
-//   }
-
-//   // Função que desenha gráfico de barras anual
-//   function desenharBarrasAnual() {
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-//     desenharGridFixo();
-
-//     const { ganhos, gastos } = getDados();
-//     const larguraBarra = 20;
-//     const espacamento = 60;
-//     const baseY = canvas.height - 50;
-//     const alturaMax = canvas.height - 100;
-
-//     meses.forEach((mes, i) => {
-//       let alturaG = (ganhos[i] / 1500) * alturaMax;
-//       let alturaC = (gastos[i] / 1500) * alturaMax;
-
-//       // Desenha ganhos
-//       ctx.fillStyle = "green";
-//       ctx.fillRect(80 + i * espacamento, baseY - alturaG, larguraBarra, alturaG);
-
-//       // Desenha gastos
-//       ctx.fillStyle = "red";
-//       ctx.fillRect(80 + i * espacamento + larguraBarra + 5, baseY - alturaC, larguraBarra, alturaC);
-
-//       ctx.fillStyle = "#000";
-//       ctx.fillText(mes, 80 + i * espacamento, baseY + 15);
-//     });
-
-//     // Desenha legenda
-//     ctx.fillStyle = "green";
-//     ctx.fillRect(canvas.width - 120, 30, 15, 15);
-//     ctx.fillStyle = "#000";
-//     ctx.fillText("Ganhos", canvas.width - 100, 42);
-
-//     ctx.fillStyle = "red";
-//     ctx.fillRect(canvas.width - 120, 55, 15, 15);
-//     ctx.fillStyle = "#000";
-//     ctx.fillText("Gastos", canvas.width - 100, 67);
-//   }
-
-//   // Atualiza gráfico ao mudar qualquer input
-//   inputs.forEach(input => input.addEventListener("input", desenharBarrasAnual));
-//   desenharBarrasAnual(); // desenha gráfico inicial
-// }
 
 // Inicializa os blocos com categorias fixas ou carregadas do banco
 async function carregarCategorias() {
@@ -444,7 +282,7 @@ async function carregarCategorias() {
     "#9C27B0", "#FF9800", "#795548", "#009688"
 
   if (nomesGanhos.length > 0) {
-    inicializarBloco("blocoGanhos", nomesGanhos, ["#4caf50", "#36a2eb", "#ffcd56","#9C27B0", "#FF9800", "#795548", "#009688"]);
+    inicializarBloco("blocoGanhos", nomesGanhos, ["#4caf50", "#36a2eb", "#ffcd56", "#9C27B0", "#FF9800", "#795548", "#009688"]);
   }
 
   // inicializarBlocoAnual();

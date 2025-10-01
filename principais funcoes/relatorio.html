@@ -2,7 +2,7 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <title>FluxoCash - Relatorios</title>
+    <title>FluxoCash - Relatorio</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="icon" href="../assets/imgs/favIcon.png" />
@@ -67,8 +67,8 @@
           <a href="../index.html"> Sair da conta </a>
         </span>
       </div>
-    <main>
-      <h1>Relatórios</h1>
+    <main style="padding: 50px;">
+      <!-- <h1>Relatórios</h1> -->
       <div class="container" id="containerCartoes"></div>
   
       <div id="modalOverlay">
@@ -81,7 +81,7 @@
         </div>
       </div>
     </main>
-    <script src="../bd/relatorioBd.js"></script>
+    <script type="module" src="../bd/relatorioBd.js"></script>
       <script>
       const usuario = localStorage.getItem("usuarioLogado");
       document.getElementById("nomeUserTela").textContent =

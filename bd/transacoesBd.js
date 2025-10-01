@@ -118,6 +118,7 @@ btnAdicionarCategoria.addEventListener("click", async (e) => {
   const { data: existente } = await supabase
     .from("categoria")
     .select("id_categoria")
+     .eq("id_usuario", usuario_id)
     .ilike("tipo", nomeCategoria)
     .maybeSingle();
 
