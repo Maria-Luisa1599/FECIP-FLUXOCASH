@@ -1,3 +1,6 @@
+/* ESTILIZAÇÃO GERAL DO INICIO DO SITE */
+
+
 * {
   margin: 0;
   padding: 0;
@@ -13,7 +16,7 @@ body {
 nav {
   transition: .3s;
   width: 5.5%;
-  /* width: 4%; */
+
   height: 100vh;
   position: fixed;
   display: flex;
@@ -88,13 +91,10 @@ header {
     padding: 10px 20px;
     font-size: 15px;
     text-align: center;
-    /* width: 30%; */
     border-radius: 8px;
     background-color: #173B42;
     color: white;
     cursor: pointer;
-    /* height: 30px; */
-    /* transition: 0.2s; */
 }
 .dadosUser .logout a{
   text-decoration: none;

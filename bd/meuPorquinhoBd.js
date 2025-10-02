@@ -1,3 +1,5 @@
+// BANCO DE DAODS DE MEU PORQUINHO
+
 // Recupera do localStorage o ID do usuário logado (salvo no login)
 const usuario_id = localStorage.getItem("usuario_id");
 const usuario_meta = localStorage.getItem('usuario_meta');
@@ -60,8 +62,6 @@ async function pegarTotalCofrinho() {
   console.log(data[0].saldo)
   return data[0].saldo;
 }
-
-
 
 
 // Função que cria um alerta estilizado na tela

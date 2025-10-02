@@ -1,3 +1,5 @@
+// BANCO DE DAODS DE TRANSACOES
+
 // Importa a biblioteca do Supabase diretamente do CDN
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 

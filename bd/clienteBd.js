@@ -1,3 +1,5 @@
+// BANCO DE DAODS DE CLIENTE
+
 // Função para adicionar um novo cliente ao banco de dados
 function mostrarAlerta(mensagem) {
   const overlay = document.createElement("div");

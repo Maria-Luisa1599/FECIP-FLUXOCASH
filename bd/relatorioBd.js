@@ -1,10 +1,12 @@
+// BANCO DE DAODS DE RELATÓRIOS
+
 // Importa a biblioteca do Supabase diretamente do CDN
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // Cria o cliente Supabase usando a URL do projeto e a chave pública (anon key)
 const supabase = createClient(
-  "https://chvaqdzgvfqtcfaccomy.supabase.co", // URL do projeto Supabase
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNodmFxZHpndmZxdGNmYWNjb215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMDU3ODIsImV4cCI6MjA3MDc4MTc4Mn0.0Wosp2gv_RfE1qVj4uClMSX3WmWLvpkqfLhe6Yhbw2I" // chave anon
+    "https://chvaqdzgvfqtcfaccomy.supabase.co", // URL do projeto Supabase
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNodmFxZHpndmZxdGNmYWNjb215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMDU3ODIsImV4cCI6MjA3MDc4MTc4Mn0.0Wosp2gv_RfE1qVj4uClMSX3WmWLvpkqfLhe6Yhbw2I" // chave anon
 );
 
 // Recupera o ID do usuário que foi armazenado no navegador (localStorage)
@@ -18,7 +20,7 @@ const btnBaixarModal = document.getElementById("baixarModal");
 const btnFecharModal = document.getElementById("fecharModal");
 
 // Array que guarda os relatórios de cada mês
-// Cada relatório contém ganhos, gastos e investimentos com categorias e valores
+// Cada relatório contém ganhos, gastos com categorias e valores
 
 
 let ultimoPdfUrl = null; // guarda a URL do último PDF gerado
@@ -45,7 +47,7 @@ async function renderizarRelatorios() {
         return;
     }
 
-function criarRelatorioDiv(relatorio, index) {
+    function criarRelatorioDiv(relatorio, index) {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = `<h2>Relatório - ${relatorio.mes}</h2>`;
 
@@ -61,49 +63,48 @@ function criarRelatorioDiv(relatorio, index) {
         tempDiv.innerHTML += `<canvas id="graficoGastos${index}" width="300" height="150"></canvas>`;
         tempDiv.innerHTML += criarSecao("Principais Ganho", relatorio.ganhos);
         tempDiv.innerHTML += `<canvas id="graficoGanhos${index}" width="300" height="150"></canvas>`;
-        // tempDiv.innerHTML += criarSecao("Investimentos", relatorio.investimentos);
-        // tempDiv.innerHTML += `<canvas id="graficoInvestimentos${index}" width="300" height="150"></canvas>`;
+
+        console.log(index)
 
         return tempDiv;
     }
 
-function pegarPrincipaisTransacoes(transacoes, categorias, tipoFiltro) {
-    // Define a data limite (10 dias atrás)
-    const dezDiasAtras = new Date();
-    dezDiasAtras.setDate(dezDiasAtras.getDate() - 10);
+    function pegarPrincipaisTransacoes(transacoes, categorias, tipoFiltro) {
+        // Define a data limite (10 dias atrás)
+        const dezDiasAtras = new Date();
+        dezDiasAtras.setDate(dezDiasAtras.getDate() - 10);
 
-    // Filtra transações do tipo correto e que ocorreram nos últimos 10 dias
-    const transacoesFiltradas = transacoes
-        .filter(t => t.tipo === tipoFiltro)
-        .filter(t => new Date(t.data) >= dezDiasAtras);
+        // Filtra transações do tipo correto e que ocorreram nos últimos 10 dias
+        const transacoesFiltradas = transacoes
+            .filter(t => t.tipo === tipoFiltro)
+            .filter(t => new Date(t.data) >= dezDiasAtras);
 
-    if (transacoesFiltradas.length === 0) return [];
+        if (transacoesFiltradas.length === 0) return [];
 
-    // Agrupa as transações por categoria e soma os valores
-    const valoresPorCategoria = transacoesFiltradas.reduce((acc, tr) => {
-        const categoria = categorias.find(c => c.id_categoria == tr.fk_categoria_id_categoria);
-        if (!categoria) return acc;
+        // Agrupa as transações por categoria e soma os valores
+        const valoresPorCategoria = transacoesFiltradas.reduce((acc, tr) => {
+            const categoria = categorias.find(c => c.id_categoria == tr.fk_categoria_id_categoria);
+            if (!categoria) return acc;
 
-        if (!acc[categoria.tipo]) acc[categoria.tipo] = 0;
-        acc[categoria.tipo] += tr.valor;
-        return acc;
-    }, {});
+            if (!acc[categoria.tipo]) acc[categoria.tipo] = 0;
+            acc[categoria.tipo] += tr.valor;
+            return acc;
+        }, {});
 
-    // Converte o objeto em array para exibição no relatório
-    const resultado = Object.entries(valoresPorCategoria)
-        .map(([categoria, valor]) => ({ categoria, valor }))
-        .sort((a, b) => b.valor - a.valor); // opcional: ordenar do maior para o menor
+        // Converte o objeto em array para exibição no relatório
+        const resultado = Object.entries(valoresPorCategoria)
+            .map(([categoria, valor]) => ({ categoria, valor }))
+            .sort((a, b) => b.valor - a.valor); // opcional: ordenar do maior para o menor
 
-    return resultado;
-}
+        return resultado;
+    }
 
 
-const relatorio = {
-    mes: "Relatorio Geral",
-    ganhos: pegarPrincipaisTransacoes(transacoes, categorias, "ganho"),
-    gastos: pegarPrincipaisTransacoes(transacoes, categorias, "gasto"),
-    // investimentos: pegarPrincipaisTransacoes(transacoes, categorias, "investimento")
-};
+    const relatorio = {
+        mes: "Relatorio Geral",
+        ganhos: pegarPrincipaisTransacoes(transacoes, categorias, "ganho"),
+        gastos: pegarPrincipaisTransacoes(transacoes, categorias, "gasto"),
+    };
 
 
     console.log("📊 Relatório pronto:", relatorio);
@@ -130,7 +131,6 @@ const relatorio = {
                 data: [
                     relatorio.ganhos.reduce((a, b) => a + b.valor, 0),
                     relatorio.gastos.reduce((a, b) => a + b.valor, 0),
-                    // relatorio.investimentos.reduce((a, b) => a + b.valor, 0)
                 ],
                 backgroundColor: ['#4CAF50', '#F44336', '#2196F3']
             }]
@@ -151,24 +151,32 @@ const relatorio = {
             type: 'bar',
             data: {
                 labels: relatorio.gastos.map(g => g.categoria),
-                datasets: [{ data: relatorio.gastos.map(g => g.valor), backgroundColor: '#F44336' }]
+                datasets: [{
+                    label: 'Gastos', // CORREÇAO - OQUE ACONTECE É QUE NO DATASET FICA SEM O NOME DA LABEL E POR ISSO FICA COMO UNDIFINED
+                    data: relatorio.gastos.map(g => g.valor),
+                    backgroundColor: '#F44336'
+                }]
             }
         });
 
-new Chart(document.getElementById(`graficoGanhos0`), {
-    type: 'bar',
-    data: {
-        labels: relatorio.ganhos.map(g => g.categoria),
-        datasets: [{ data: relatorio.ganhos.map(g => g.valor), backgroundColor: '#4CAF50' }]
-    }
-});
+        new Chart(document.getElementById(`graficoGanhos0`), {
+            type: 'bar',
+            data: {
+                labels: relatorio.ganhos.map(g => g.categoria),
+                datasets: [{
+                    label: 'Ganhos', // MESMA COISA Q OS GASTOS
+                    data: relatorio.ganhos.map(g => g.valor),
+                    backgroundColor: '#4CAF50'
+                }]
+            }
+        });
 
 
         setTimeout(() => {
             html2pdf().from(conteudo).toPdf().output('blob').then((pdfBlob) => {
                 ultimoPdfUrl = URL.createObjectURL(pdfBlob);
             });
-        }, 1000); 
+        }, 1000);
     });
 }
 

@@ -1,3 +1,6 @@
+/* ESTILIZAÇÃO DAS TRANSACOES */
+
+
 body {
   height: 120vh;
   font-family: arial;
@@ -145,7 +148,7 @@ button{
 }
 
 tr.pendentes td {
-  color: #d4aa00;   /* amarelo ouro */
+  color: #d4aa00;  
   font-weight: bold;
 }
 

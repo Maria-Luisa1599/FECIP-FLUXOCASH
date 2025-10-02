@@ -1,3 +1,5 @@
+// BANCO DE DAODS DE GRÁFICOS
+
 // -----------------------------
 // 1. Importação da biblioteca Supabase
 // -----------------------------
